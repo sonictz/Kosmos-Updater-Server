@@ -1,0 +1,17 @@
+{
+  "name": "sdfile-updater",
+  "version": "1.0.0",
+  "description": "Backend Server Portion of SDFile Updater.",
+  "main": "index.js",
+  "author": {
+    "name": "Steven Mattera",
+    "email": "me@stevenmattera.com",
+    "url": "https://stevenmattera.com"
+  },
+  "license": "GPL-2.0-only",
+  "dependencies": {
+    "archiver": "^2.1.1",
+    "crc-32": "^1.2.0",
+    "simple-git": "^1.96.0"
+  }
+}
