@@ -19,16 +19,23 @@ const fs = require('fs')
 const http = require('http')
 const path = require('path')
 
-const portNumber = 80
+const portNumber = 9001
 const serverHeader = 'SDFU/1.0'
 
 const server = http.createServer((request, response) => {
     const url = (!request.url.endsWith('/')) ? request.url + '/' : request.url,
         method = request.method
 
-    if (url === '/' && method === 'GET') {
-        var filePath = path.join(__dirname, '/latest.txt')
-        var stat = fs.statSync(filePath)
+    if (url.startsWith('/version-number/') && method === 'GET') {
+        let filePath
+
+        if (url.toLowerCase().endsWith('bleeding-edge/')) {
+            filePath = path.join(__dirname, '/bleeding-edge.txt')
+        } else {
+            filePath = path.join(__dirname, '/stable.txt')
+        }
+
+        let stat = fs.statSync(filePath)
 
         response.writeHead(200, {
             'Server': serverHeader,
@@ -37,8 +44,15 @@ const server = http.createServer((request, response) => {
         })
 
         fs.createReadStream(filePath).pipe(response)
-    } else if (url === '/download/' && method === 'GET') {
-        var filePath = path.join(__dirname, '/latest.zip')
+    } else if (url.startsWith('/download/') && method === 'GET') {
+        let filePath
+        
+        if (url.toLowerCase().endsWith('bleeding-edge/')) {
+            filePath = path.join(__dirname, '/bleeding-edge.zip')
+        } else {
+            filePath = path.join(__dirname, '/stable.zip')
+        }
+        
         var stat = fs.statSync(filePath)
 
         response.writeHead(200, {

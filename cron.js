@@ -24,36 +24,77 @@ if (!fs.existsSync(__dirname + '/SDFilesSwitch')) {
         .clone('https://github.com/tumGER/SDFilesSwitch.git', './SDFilesSwitch')
         .then(() => {
             git(__dirname + '/SDFilesSwitch').silent(true)
-                .tags(writeLatestVersion)
-                .then(bundleLatestVersion)
-        })
+                .tags(writeLatestStableVersion)
+                .checkoutLatestTag(bundleLatestStableVersion)
+                .log({ '-1': null }, writeLatestBleedingEdgeVersion)
+                .checkout('master', bundleLatestBleedingEdgeVersion)
+        });
 } else {
     git(__dirname + '/SDFilesSwitch').silent(true)
         .pull('origin', 'master')
-        .tags(writeLatestVersion)
-        .then(bundleLatestVersion)
+        .tags(writeLatestStableVersion)
+        .checkoutLatestTag(bundleLatestStableVersion)
+        .log({ '-1': null }, writeLatestBleedingEdgeVersion)
+        .checkout('master', bundleLatestBleedingEdgeVersion)
 }
 
-function writeLatestVersion(err, result) {
+function writeLatestStableVersion(err, result) {
     if (err) {
         console.log('Tags Error: ', err)
         return
     }
 
-    if (fs.existsSync(__dirname + '/latest.txt'))
-        fs.unlinkSync(__dirname + '/latest.txt')
+    if (fs.existsSync(__dirname + '/stable.txt'))
+        fs.unlinkSync(__dirname + '/stable.txt')
 
-    fs.writeFile(__dirname + '/latest.txt', result.latest, (writeErr) => {
+    fs.writeFile(__dirname + '/stable.txt', result.latest, (writeErr) => {
         if (writeErr)
             console.log('Write Error: ', writeErr)
     })
 }
 
-function bundleLatestVersion() {
-    if (fs.existsSync(__dirname + '/latest.zip'))
-        fs.unlinkSync(__dirname + '/latest.zip')
+function bundleLatestStableVersion() {
+    if (fs.existsSync(__dirname + '/stable.zip'))
+        fs.unlinkSync(__dirname + '/stable.zip')
 
-    const output = fs.createWriteStream(__dirname + '/latest.zip')
+    const output = fs.createWriteStream(__dirname + '/stable.zip')
+    const archive = archiver('zip', {
+        zlib: { level: 9 }
+    })
+
+    archive.on('warning', (err) => {
+        console.log('Bundle Warning: ', err)
+    })
+
+    archive.on('error', (err) => {
+        console.log('Bundle Error: ', err)
+    })
+
+    archive.pipe(output)
+    archive.directory(__dirname + '/SDFilesSwitch/Compiled/', false)
+    archive.finalize()
+}
+
+function writeLatestBleedingEdgeVersion(err, result) {
+    if (err) {
+        console.log('Log Error: ', err)
+        return
+    }
+
+    if (fs.existsSync(__dirname + '/bleeding-edge.txt'))
+        fs.unlinkSync(__dirname + '/bleeding-edge.txt')
+
+    fs.writeFile(__dirname + '/bleeding-edge.txt', result.latest.hash, (writeErr) => {
+        if (writeErr)
+            console.log('Write Error: ', writeErr)
+    })
+}
+
+function bundleLatestBleedingEdgeVersion() {
+    if (fs.existsSync(__dirname + '/bleeding-edge.zip'))
+        fs.unlinkSync(__dirname + '/bleeding-edge.zip')
+
+    const output = fs.createWriteStream(__dirname + '/bleeding-edge.zip')
     const archive = archiver('zip', {
         zlib: { level: 9 }
     })
