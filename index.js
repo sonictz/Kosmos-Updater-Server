@@ -15,69 +15,49 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-const crc32 = require('crc-32')
 const fs = require('fs')
-const net = require('net')
+const http = require('http')
+const path = require('path')
 
-const currentVersion = 'SDFU/1.0'
+const portNumber = 80
+const serverHeader = 'SDFU/1.0'
 
-const server = net.createServer((socket) => {
-    let buffer = ''
+const server = http.createServer((request, response) => {
+    const url = (!request.url.endsWith('/')) ? request.url + '/' : request.url,
+        method = request.method
 
-    socket.write(generatePacket(200))
+    if (url === '/' && method === 'GET') {
+        var filePath = path.join(__dirname, '/latest.txt')
+        var stat = fs.statSync(filePath)
 
-    socket.on('data', (data) => {
-        buffer += data.toString()
+        response.writeHead(200, {
+            'Server': serverHeader,
+            'Content-Type': 'text/plain',
+            'Content-Length': stat.size
+        })
 
-        // Parse out message.
-        if (buffer.indexOf('\r\n') !== -1) {
-            const message = buffer.substr(0, buffer.indexOf('\r\n') + 2)
-            handleMessage(message, socket)
-            buffer = buffer.substr(buffer.indexOf('\r\n') + 2)
-        }
+        fs.createReadStream(filePath).pipe(response)
+    } else if (url === '/download/' && method === 'GET') {
+        var filePath = path.join(__dirname, '/latest.zip')
+        var stat = fs.statSync(filePath)
 
-        // Prevent someone from sending large amount of garbage data.
-        if (buffer.length >= 256) {
-            buffer = ''
-            socket.write(generatePacket(400, 'Stop it, Get Some Help'))
-        }
-    })
+        response.writeHead(200, {
+            'Server': serverHeader,
+            'Content-Type': 'application/zip',
+            'Content-Length': stat.size
+        })
 
-    socket.on('end', () => {
-        buffer = ''
-    })
+        fs.createReadStream(filePath).pipe(response)
+    } else {
+        response.writeHead(404)
+        response.end('<h1>404 File Not Found</h1>')
+    }
 })
 
-server.listen(9001)
-
-function generatePacket(statusCode, body = '') {
-    const checksum = crc32.str(body),
-        length = currentVersion.length + (statusCode + '').length + (checksum + '').length + body.length + 9
-    return `${ currentVersion } ${ statusCode } ${ checksum } ${ length }\r\n${ body }\r\n\r\n`
-}
-
-function handleMessage(message, socket) {
-    const splitMessage = message.split(' ')
-    if (splitMessage.length !== 2) {
-        socket.write(generatePacket(400))
-        return
+server.listen(portNumber, (err) => {
+    if (err) {
+        return console.log('Something bad happened: ', err)
     }
 
-    splitMessage[1] = splitMessage[1].substr(0, splitMessage[1].length - 2)
-    if (splitMessage[1] !== currentVersion) {
-        socket.write(generatePacket(505))
-        return
-    }
-
-    if (splitMessage[0] === 'get-latest-version') {
-        fs.readFile('latest.txt', 'utf-8', (err, data) => {
-            socket.write(generatePacket(200, data))
-        })
-    } else if (splitMessage[0] === 'get-latest') {
-        fs.readFile('latest.zip', 'base64', (err, data) => {
-            socket.write(generatePacket(200, data))
-        })
-    } else {
-        socket.write(generatePacket(405))
-    }
-}
+    console.log(`Server is listening on ${ portNumber }`)
+})
