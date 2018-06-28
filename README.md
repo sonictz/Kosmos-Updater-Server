@@ -1,0 +1,3 @@
+# SDFile Updater
+
+This is the backend server for the homebrew application on the Nintendo Switch. The server has two components the server (*index.js*) and the cron (*cron.js*). On my server I have the cron running every 6 hours to check and see if there has been any updates to the SDFiles repository. (You could run this more often if you like on your server.) The server portion I have running through PM2 for managing the node process and nginx as the HTTP server and NodeJS just running as a proxy.
