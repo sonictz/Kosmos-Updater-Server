@@ -19,23 +19,32 @@ const archiver = require('archiver')
 const fs = require('fs')
 const git = require('simple-git')
 
+let latestTag;
+
 if (!fs.existsSync(__dirname + '/SDFilesSwitch')) {
     git().silent(true)
         .clone('https://github.com/tumGER/SDFilesSwitch.git', './SDFilesSwitch')
         .then(() => {
-            git(__dirname + '/SDFilesSwitch').silent(true)
-                .tags(writeLatestStableVersion)
-                .checkoutLatestTag(bundleLatestStableVersion)
-                .log({ '-1': null }, writeLatestBleedingEdgeVersion)
-                .checkout('master', bundleLatestBleedingEdgeVersion)
+            if (process.argv[2] == 'bleeding-edge') {
+                git(__dirname + '/SDFilesSwitch').silent(true)
+                    .log({ '-1': null }, writeLatestBleedingEdgeVersion)
+                    .checkout('master', bundleLatestBleedingEdgeVersion)
+            } else {
+                git(__dirname + '/SDFilesSwitch').silent(true)
+                    .tags(writeLatestStableVersion)
+                    .checkout(`tags/${ latestTag }`, bundleLatestStableVersion)
+            }
         });
+} else if (process.argv[2] == 'bleeding-edge') {
+    git(__dirname + '/SDFilesSwitch').silent(true)
+        .pull('origin', 'master')
+        .log({ '-1': null }, writeLatestBleedingEdgeVersion)
+        .checkout('master', bundleLatestBleedingEdgeVersion)
 } else {
     git(__dirname + '/SDFilesSwitch').silent(true)
         .pull('origin', 'master')
         .tags(writeLatestStableVersion)
-        .checkoutLatestTag(bundleLatestStableVersion)
-        .log({ '-1': null }, writeLatestBleedingEdgeVersion)
-        .checkout('master', bundleLatestBleedingEdgeVersion)
+        .checkout(`tags/${ latestTag }`, bundleLatestStableVersion)
 }
 
 function writeLatestStableVersion(err, result) {
@@ -47,7 +56,9 @@ function writeLatestStableVersion(err, result) {
     if (fs.existsSync(__dirname + '/stable.txt'))
         fs.unlinkSync(__dirname + '/stable.txt')
 
-    fs.writeFile(__dirname + '/stable.txt', result.latest, (writeErr) => {
+    latestTag = result.all[result.all.length - 1]
+
+    fs.writeFile(__dirname + '/stable.txt', latestTag, (writeErr) => {
         if (writeErr)
             console.log('Write Error: ', writeErr)
     })
