@@ -15,63 +15,19 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-const fs = require('fs')
-const http = require('http')
-const path = require('path')
+const express = require('express')
+const v1Api = require('./v1Api.js')
+const v2Api = require('./v2Api.js')
+const app = express()
 
 const portNumber = 9001
-const serverHeader = 'SDFU/1.0'
 
-const server = http.createServer((request, response) => {
-    const url = (!request.url.endsWith('/')) ? request.url + '/' : request.url,
-        method = request.method
+app.get('/version-number/:channel', v1Api.getVersionNumber)
+app.get('/download/:channel', v1Api.getDownload)
 
-    if (url.startsWith('/version-number/') && method === 'GET') {
-        let filePath
+app.use('/v1', v1Api.router)
+app.use('/v2', v2Api)
 
-        if (url.toLowerCase().endsWith('bleeding-edge/')) {
-            filePath = path.join(__dirname, '/bleeding-edge.txt')
-        } else {
-            filePath = path.join(__dirname, '/stable.txt')
-        }
-
-        let stat = fs.statSync(filePath)
-
-        response.writeHead(200, {
-            'Server': serverHeader,
-            'Content-Type': 'text/plain',
-            'Content-Length': stat.size
-        })
-
-        fs.createReadStream(filePath).pipe(response)
-    } else if (url.startsWith('/download/') && method === 'GET') {
-        let filePath
-        
-        if (url.toLowerCase().endsWith('bleeding-edge/')) {
-            filePath = path.join(__dirname, '/bleeding-edge.zip')
-        } else {
-            filePath = path.join(__dirname, '/stable.zip')
-        }
-        
-        var stat = fs.statSync(filePath)
-
-        response.writeHead(200, {
-            'Server': serverHeader,
-            'Content-Type': 'application/zip',
-            'Content-Length': stat.size
-        })
-
-        fs.createReadStream(filePath).pipe(response)
-    } else {
-        response.writeHead(404)
-        response.end('<h1>404 File Not Found</h1>')
-    }
-})
-
-server.listen(portNumber, (err) => {
-    if (err) {
-        return console.log('Something bad happened: ', err)
-    }
-
+app.listen(portNumber, () => {
     console.log(`Server is listening on ${ portNumber }`)
 })
