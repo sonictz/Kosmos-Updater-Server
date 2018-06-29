@@ -16,14 +16,14 @@ router.get('/app-version-number', (req, res) => {
 })
 
 router.get('/app-download', (req, res) => {
-    const filePath = path.join(__dirname, '/res/SDFileUpdater.nro')
+    const filePath = path.join(__dirname, '/res/SDFilesUpdater.nro')
     const stat = fs.statSync(filePath)
 
     res.status(200)
     res.setHeader('Server', serverHeader)
     res.setHeader('Content-Type', 'application/octet-stream')
     res.setHeader('Content-Length', stat.size)
-    res.setHeader('Content-Disposition', 'attachment; filename="SDFileUpdater.nro"')
+    res.setHeader('Content-Disposition', 'attachment; filename="SDFilesUpdater.nro"')
     fs.createReadStream(filePath).pipe(res)
 })
 
