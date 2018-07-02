@@ -71,9 +71,7 @@ function validateLauncher(launcher) {
     if (launcher.toLowerCase() === 'hekate') {
         return 'hekate'
     } else if (launcher.toLowerCase() === 'layeredfs') {
-        return 'layeredfs'
-    } else if (launcher.toLowerCase() === 'switchblade') {
-        return 'switchblade'
+        return 'hekate'
     }
 
     return null

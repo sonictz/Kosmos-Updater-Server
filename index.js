@@ -22,10 +22,6 @@ const app = express()
 
 const portNumber = 9001
 
-app.get('/version-number/:channel', v1Api.getVersionNumber)
-app.get('/download/:channel', v1Api.getDownload)
-
-app.use('/v1', v1Api.router)
 app.use('/v2', v2Api)
 
 app.listen(portNumber, () => {

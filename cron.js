@@ -18,6 +18,7 @@
 const archiver = require('archiver')
 const fs = require('fs')
 const git = require('simple-git')
+const semver = require('semver')
 
 let latestTag;
 
@@ -40,6 +41,7 @@ if (!fs.existsSync(__dirname + '/SDFilesSwitch')) {
 function getLatestStable() {
     git(__dirname + '/SDFilesSwitch').silent(true)
         .pull('origin', 'master')
+        .fetch('--tags', () => { /* Do Nothing */ })
         .tags(writeLatestStableVersion)
         .checkout('tags/${ latestTag }', bundleLatestStableVersion)
 }
@@ -50,15 +52,38 @@ function writeLatestStableVersion(err, result) {
         return
     }
 
-    latestTag = result.all[result.all.length - 1]
-    writeVersion(latestTag, __dirname + '/res/stable.txt')
+    const tags = result.all.map((e) => {
+        // Remove any letters from the tag name.
+        let versionNumber = e.replace(/[^0-9.]/g, '')
+
+        // Remove any preceding zeros.
+        versionNumber = versionNumber.split('.').map((e) => parseInt(e).toString()).join('.')
+
+        // Normailze the versions.
+        switch((versionNumber.match(/[.]/g) || []).length) {
+            case 0:
+                versionNumber += '.0.0'
+                break
+
+            case 1:
+                versionNumber += '.0'
+                break
+        }
+
+        return {
+            versionNumber,
+            tagName: e
+        }
+    })
+
+    const latestVersion = semver.maxSatisfying(tags.map((e) => e.versionNumber), '*')
+    const latestTag = tags.find((e) => e.versionNumber == latestVersion)
+
+    writeVersion(latestTag.tagName, __dirname + '/res/stable.txt')
 }
 
 function bundleLatestStableVersion() {
-    archive(__dirname + '/SDFilesSwitch/Compiled', __dirname + '/res/stable.zip')
-    archive(__dirname + '/SDFilesSwitch/Compiled/Hekate', __dirname + '/res/hekate-stable.zip')
-    archive(__dirname + '/SDFilesSwitch/Compiled/LayeredFS/SDFiles', __dirname + '/res/layeredfs-stable.zip')
-    archive(__dirname + '/SDFilesSwitch/Compiled/SwitchBlade', __dirname + '/res/switchblade-stable.zip')
+    archive(__dirname + '/SDFilesSwitch/Compiled', __dirname + '/res/hekate-stable.zip')
 }
 
 // Bleeding Edge
@@ -80,10 +105,7 @@ function writeLatestBleedingEdgeVersion(err, result) {
 }
 
 function bundleLatestBleedingEdgeVersion() {
-    archive(__dirname + '/SDFilesSwitch/Compiled', __dirname + '/res/bleedingedge.zip')
-    archive(__dirname + '/SDFilesSwitch/Compiled/Hekate', __dirname + '/res/hekate-bleedingedge.zip')
-    archive(__dirname + '/SDFilesSwitch/Compiled/LayeredFS/SDFiles', __dirname + '/res/layeredfs-bleedingedge.zip')
-    archive(__dirname + '/SDFilesSwitch/Compiled/SwitchBlade', __dirname + '/res/switchblade-bleedingedge.zip')
+    archive(__dirname + '/SDFilesSwitch/Compiled', __dirname + '/res/hekate-bleedingedge.zip')
 }
 
 // Helper Functions
