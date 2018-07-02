@@ -16,7 +16,6 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 const express = require('express')
-const v1Api = require('./v1Api.js')
 const v2Api = require('./v2Api.js')
 const app = express()
 
