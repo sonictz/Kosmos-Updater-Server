@@ -83,7 +83,8 @@ function writeLatestStableVersion(err, result) {
 }
 
 function bundleLatestStableVersion() {
-    archive(__dirname + '/SDFilesSwitch/Compiled', __dirname + '/res/hekate-stable.zip')
+    archive(__dirname + '/SDFilesSwitch/Hekate', __dirname + '/res/hekate-stable.zip')
+    archive(__dirname + '/SDFilesSwitch/ReiNX', __dirname + '/res/reinx-stable.zip')
 }
 
 // Bleeding Edge
@@ -105,7 +106,8 @@ function writeLatestBleedingEdgeVersion(err, result) {
 }
 
 function bundleLatestBleedingEdgeVersion() {
-    archive(__dirname + '/SDFilesSwitch/Compiled', __dirname + '/res/hekate-bleedingedge.zip')
+    archive(__dirname + '/SDFilesSwitch/Hekate', __dirname + '/res/hekate-bleedingedge.zip')
+    archive(__dirname + '/SDFilesSwitch/ReiNX', __dirname + '/res/reinx-bleedingedge.zip')
 }
 
 // Helper Functions
