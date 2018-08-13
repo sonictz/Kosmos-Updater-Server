@@ -18,6 +18,9 @@
 const express = require('express')
 const fs = require('fs')
 const path = require('path')
+const crypto = require('crypto')
+const childProcess = require('child_process')
+const config = require('../config.json')
 const router = express.Router()
 const serverHeader = 'SDFU/2.0'
 
@@ -82,6 +85,42 @@ router.get('/download/:launcher/:channel', (req, res) => {
     res.setHeader('Content-Length', stat.size)
     res.setHeader('Content-Disposition', 'attachment; filename="' + launcher + '-' + channel + '.zip"')
     fs.createReadStream(filePath).pipe(res)
+})
+
+router.post('/update', (req, res) => {
+    const userAgent = req.headers['user-agent']
+    if (userAgent === undefined || !userAgent.startsWith('GitHub-Hookshot/')) {
+        res.status(401)
+        res.send('Unauthorized - Incorrect User Agent')
+        return
+    }
+
+    const hmac = crypto.createHmac('sha1', config.secret)
+    hmac.update(JSON.stringify(req.body))
+
+    const signature = req.headers['x-hub-signature']
+    const calculatedSignature = 'sha1=' + hmac.digest('hex')
+    if (signature !== calculatedSignature) {
+        res.status(401)
+        res.send('Unauthorized - Incorrect Secret Key')
+        return
+    }
+
+    const event = req.headers['x-github-event']
+    if (event === 'release') {
+        res.status(200)
+        res.send('Updated stable files.')
+
+        childProcess.fork('./update.js', ['stable'])
+    } else if (event === 'push') {
+        res.status(200)
+        res.send('Updated bleeding-edge files.')
+
+        childProcess.fork('./update.js', ['bleeding-edge'])
+    } else {
+        res.status(202)
+        res.send('Unable to handle event `' + event + '`.')
+    }
 })
 
 function validateLauncher(launcher) {
