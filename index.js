@@ -16,11 +16,13 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 const express = require('express')
+const bodyParser = require('body-parser')
 const v2Api = require('./v2Api.js')
 const app = express()
 
 const portNumber = 9001
 
+app.use(bodyParser.json())
 app.use('/v2', v2Api)
 
 app.listen(portNumber, () => {
