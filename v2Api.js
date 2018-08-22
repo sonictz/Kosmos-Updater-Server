@@ -124,10 +124,12 @@ router.post('/update', (req, res) => {
 })
 
 function validateLauncher(launcher) {
-    if (launcher.toLowerCase() === 'hekate' || launcher.toLowerCase() === 'layeredfs') {
-        return 'hekate'
+    if (launcher.toLowerCase() === 'hekate') {
+        return 'sdfiles'
+    } else if (launcher.toLowerCase() === 'layeredfs') {
+        return 'sdfiles'
     } else if (launcher.toLowerCase() === 'reinx') {
-        return 'reinx'
+        return 'sdfiles'
     }
 
     return null
