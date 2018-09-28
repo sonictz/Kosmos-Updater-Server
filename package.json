@@ -13,6 +13,8 @@
     "archiver": "^2.1.1",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
+    "recursive-copy": "^2.0.9",
+    "rmfr": "^2.0.0",
     "semver": "^5.5.0",
     "simple-git": "^1.96.0"
   }

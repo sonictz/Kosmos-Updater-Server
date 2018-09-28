@@ -111,12 +111,12 @@ router.post('/update', (req, res) => {
         res.status(200)
         res.send('Updated stable files.')
 
-        childProcess.fork('./update.js', ['stable'])
+        childProcess.fork('./update.js', [ 'stable' ])
     } else if (event === 'push') {
         res.status(200)
         res.send('Updated bleeding-edge files.')
 
-        childProcess.fork('./update.js', ['bleeding-edge'])
+        childProcess.fork('./update.js', [ 'bleeding-edge' ])
     } else {
         res.status(202)
         res.send('Unable to handle event `' + event + '`.')
@@ -124,15 +124,11 @@ router.post('/update', (req, res) => {
 })
 
 function validateLauncher(launcher) {
-    if (launcher.toLowerCase() === 'hekate') {
-        return 'sdfiles'
-    } else if (launcher.toLowerCase() === 'layeredfs') {
-        return 'sdfiles'
-    } else if (launcher.toLowerCase() === 'reinx') {
+    if (launcher.toLowerCase() === 'hekate' || launcher.toLowerCase() === 'atmosphere' || launcher.toLowerCase() === 'reinx') {
+        return launcher.toLowerCase()
+    } else {
         return 'sdfiles'
     }
-
-    return null
 }
 
 function validateChannel(channel) {
