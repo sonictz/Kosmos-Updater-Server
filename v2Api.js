@@ -20,7 +20,7 @@ const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
 const childProcess = require('child_process')
-const config = require('../config.json')
+const config = require('./config.json')
 const router = express.Router()
 const serverHeader = 'SDFU/2.0'
 
