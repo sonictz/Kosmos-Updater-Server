@@ -1,3 +1,5 @@
 {
+    "portNumber": 9001,
+    "mongodb": "mongodb://username:password@127.0.0.1:27018/SDFilesUpdater",
     "secret": "GitHub Webhook Secret Goes Here"
 }

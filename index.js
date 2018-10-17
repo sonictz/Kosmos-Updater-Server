@@ -17,14 +17,26 @@
 
 const express = require('express')
 const bodyParser = require('body-parser')
-const v2Api = require('./v2Api.js')
+const mongoose = require('mongoose')
+const config = require('./config.json')
+const update = require('./routes/update.route')
+const v2 = require('./routes/v2.route')
+const v3 = require('./routes/v3.route')
+
+// Setup MongoDB
+mongoose.connect(config.mongodb)
+mongoose.Promise = global.Promise
+const db = mongoose.connection
+db.on('error', (err) => {
+    console.error(`MongoDB connection error: ${ err }`)
+})
+
+// Setup Express
 const app = express()
-
-const portNumber = 9001
-
 app.use(bodyParser.json())
-app.use('/v2', v2Api)
-
-app.listen(portNumber, () => {
-    console.log(`Server is listening on ${ portNumber }`)
+app.use(update)
+app.use('/v2', v2)
+app.use('/v3', v3)
+app.listen(config.portNumber, () => {
+    console.log(`Server is listening on ${ config.portNumber }`)
 })
