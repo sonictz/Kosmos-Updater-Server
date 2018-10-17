@@ -16,68 +16,98 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 const fs = require('fs')
-const path = require('path')
+const App = require('../models/app.model')
+const Package = require('../models/package.model')
 const serverHeader = 'SDFU/3.0'
 
 module.exports.getAppVersionNumber = (req, res) => {
-    // TODO: 🔥 Pull from MongoDB
-    const filePath = path.join(__dirname, '../res/app.txt')
-    const stat = fs.statSync(filePath)
+    App.findOne({ channel: 'stable' }).sort({ _id: -1 }).exec((err, app) => {
+        if (err || app === null) {
+            res.status(500)
+            res.setHeader('Server', serverHeader)
+            res.send()
+            return
+        }
 
-    res.status(200)
-    res.setHeader('Server', serverHeader)
-    res.setHeader('Content-Type', 'text/plain')
-    res.setHeader('Content-Length', stat.size)
-    fs.createReadStream(filePath).pipe(res)
+        res.status(200)
+        res.setHeader('Server', serverHeader)
+        res.setHeader('Content-Type', 'text/plain')
+        res.setHeader('Content-Length', app.version.length)
+        res.send(app.version)
+    })
 }
 
 module.exports.getApp = (req, res) => {
-    // TODO: 🔥 Pull path from MongoDB
-    const filePath = path.join(__dirname, '../res/SDFilesUpdater.nro')
-    const stat = fs.statSync(filePath)
+    App.findOne({ channel: 'stable' }).sort({ _id: -1 }).exec((err, app) => {
+        if (err || app === null) {
+            res.status(500)
+            res.setHeader('Server', serverHeader)
+            res.send()
+            return
+        }
 
-    res.status(200)
-    res.setHeader('Server', serverHeader)
-    res.setHeader('Content-Type', 'application/octet-stream')
-    res.setHeader('Content-Length', stat.size)
-    res.setHeader('Content-Disposition', 'attachment; filename="SDFilesUpdater.nro"')
-    fs.createReadStream(filePath).pipe(res)
+        const stat = fs.statSync(app.path)
+
+        res.status(200)
+        res.setHeader('Server', serverHeader)
+        res.setHeader('Content-Type', 'application/octet-stream')
+        res.setHeader('Content-Length', stat.size)
+        res.setHeader('Content-Disposition', 'attachment; filename="SDFilesUpdater.nro"')
+        fs.createReadStream(app.path).pipe(res)
+    })
 }
 
 module.exports.getPackageVersionNumber = (req, res) => {
-    const channel = validateChannel(req.params.channel)
+    Package.findOne({ channel: req.query.channel }).sort({ _id: -1 }).exec((err, package) => {
+        if (err) {
+            res.status(500)
+            res.setHeader('Server', serverHeader)
+            res.send()
+            return
+        }
 
-    if (channel === null) {
-        res.status(404)
-        res.send('File Not Found')
-        return
-    }
+        if (package === null) {
+            res.status(404)
+            res.setHeader('Server', serverHeader)
+            res.send()
+            return
+        }
 
-    // TODO: 🔥 Pull from MongoDB
-    const filePath = path.join(__dirname, '../res/' + channel + '.txt')
-    const stat = fs.statSync(filePath)
-
-    res.status(200)
-    res.setHeader('Server', serverHeader)
-    res.setHeader('Content-Type', 'text/plain')
-    res.setHeader('Content-Length', stat.size)
-    fs.createReadStream(filePath).pipe(res)
+        res.status(200)
+        res.setHeader('Server', serverHeader)
+        res.setHeader('Content-Type', 'text/plain')
+        res.setHeader('Content-Length', package.version.length)
+        res.send(package.version)
+    })
 }
 
 module.exports.getPackage = (req, res) => {
-    // TODO: 🔥 Pull path from MongoDB based on req.query.bundle and req.query.channel
-    const filePath = path.join(__dirname, '../res/' + launcher + '-' + channel + '.tar')
-    const stat = fs.statSync(filePath)
-    
-    res.status(200)
-    res.setHeader('Server', serverHeader)
-    res.setHeader('Content-Type', 'application/tar')
-    res.setHeader('Content-Length', stat.size)
-    res.setHeader('Content-Disposition', 'attachment; filename="' + launcher + '-' + channel + '.tar"')
+    Package.findOne({ bundle: req.query.bundle, channel: req.query.channel }).sort({ _id: -1 }).exec((err, package) => {
+        if (err) {
+            res.status(500)
+            res.setHeader('Server', serverHeader)
+            res.send()
+            return
+        }
 
-    // TODO: 🔥 Pull from MongoDB
-    res.setHeader('X-Version-Number', '10.0.0')
-    res.setHeader('X-Number-Of-Files', '54')
+        if (package === null) {
+            res.status(404)
+            res.setHeader('Server', serverHeader)
+            res.send()
+            return
+        }
 
-    fs.createReadStream(filePath).pipe(res)
+        const filePath = package.path
+        const stat = fs.statSync(filePath)
+        
+        res.status(200)
+        res.setHeader('Server', serverHeader)
+        res.setHeader('Content-Type', 'application/tar')
+        res.setHeader('Content-Length', stat.size)
+        res.setHeader('Content-Disposition', 'attachment; filename="' + package.bundle + '-' + package.channel + '.tar"')
+        res.setHeader('X-Version-Number', package.version)
+        res.setHeader('X-Number-Of-Files', package.numberOfFiles)
+
+        fs.createReadStream(filePath).pipe(res)    
+    })
 }

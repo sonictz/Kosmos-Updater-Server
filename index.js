@@ -24,7 +24,7 @@ const v2 = require('./routes/v2.route')
 const v3 = require('./routes/v3.route')
 
 // Setup MongoDB
-mongoose.connect(config.mongodb)
+mongoose.connect(config.mongodb, { useNewUrlParser: true })
 mongoose.Promise = global.Promise
 const db = mongoose.connection
 db.on('error', (err) => {

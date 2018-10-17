@@ -16,6 +16,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 const crypto = require('crypto')
+const Cron = require('../models/cron.model')
 const config = require('../config.json')
 
 module.exports.getUpdate = (req, res) => {
@@ -39,15 +40,67 @@ module.exports.getUpdate = (req, res) => {
 
     const event = req.headers['x-github-event']
     if (event === 'release') {
-        res.status(200)
-        res.send('Updated stable files.')
+        Cron.findOne({ channel: 'stable' }, (err, cron) => {
+            if (err || cron === null) {
+                cron = new Cron({
+                    channel: 'stable',
+                    shouldRun: true
+                })
 
-        // TODO: 🔥 Update in MongoDB as ready to pull.
+                cron.save((err) => {
+                    if (err) {
+                        res.status(500)
+                        res.send('Unable to queue update to stable files.')
+                        return
+                    }
+                    
+                    res.status(200)
+                    res.send('Queued update to stable files.')            
+                })    
+            } else {
+                Cron.findByIdAndUpdate(cron._id, { $set: { shouldRun: true }}, (err) => {
+                    if (err) {
+                        res.status(500)
+                        res.send('Unable to queue update to stable files.')
+                        return
+                    }
+
+                    res.status(200)
+                    res.send('Queued update to stable files.')            
+                })
+            }
+        })
     } else if (event === 'push') {
-        res.status(200)
-        res.send('Updated bleeding-edge files.')
+        Cron.findOne({ channel: 'bleeding-edge' }, (err, cron) => {
+            if (err || cron === null) {
+                cron = new Cron({
+                    channel: 'bleeding-edge',
+                    shouldRun: true
+                })
 
-        // TODO: 🔥 Update in MongoDB as ready to pull.
+                cron.save((err) => {
+                    if (err) {
+                        res.status(500)
+                        res.send('Unable to queue update to bleeding-edge files.')
+                        return
+                    }
+                    
+                    res.status(200)
+                    res.send('Queued update to bleeding-edge files.')            
+                })    
+            } else {
+                Cron.findByIdAndUpdate(cron._id, { $set: { shouldRun: true }}, (err) => {
+                    if (err) {
+                        res.status(500)
+                        res.send('Unable to queue update to bleeding-edge files.')
+                        return
+                    }
+
+                    res.status(200)
+                    res.send('Queued update to bleeding-edge files.')            
+                })
+            }
+        })
     } else {
         res.status(202)
         res.send(`Unable to handle event "${ event }".`)
