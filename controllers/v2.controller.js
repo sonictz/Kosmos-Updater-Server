@@ -21,7 +21,7 @@ const update_controller = require('./update.controller')
 const serverHeader = 'SDFU/2.0'
 
 function _validateLauncher(launcher) {
-    if (launcher.toLowerCase() === 'hekate' || launcher.toLowerCase() === 'layeredfs' || launcher.toLowerCase() === 'reinx') {
+    if (launcher.toLowerCase() === 'sdfiles' || launcher.toLowerCase() === 'hekate' || launcher.toLowerCase() === 'layeredfs' || launcher.toLowerCase() === 'reinx') {
         return 'sdfiles'
     }
 
