@@ -66,10 +66,9 @@ class Updater {
             for (let i = 0; i < crons.length; i++) {
                 const cron = crons[i];
                 console.log(`Running cron for ${ cron.channel }`)
-                const isStable = (cron.channel === 'stable')
 
                 try {
-                    //await this._updateCronToNotRun(cron._id)
+                    await this._updateCronToNotRun(cron._id)
                 }
                 catch (e) {
                     reject(`Unable to update cron to not run: ${ e }`)
@@ -80,7 +79,7 @@ class Updater {
                     let results;
 
                     console.log(`Get the latest version for ${ cron.channel }...`)
-                    const version = await this._getLatestVersion(isStable, repo)
+                    const version = await this._getLatestVersion((cron.channel === 'stable'), repo)
 
                     console.log(`Write the version to file for legacy APIs...`)
                     await this._writeVersion(version, `${ __dirname }/res/${ cron.channel }.txt`)
@@ -104,7 +103,7 @@ class Updater {
                             'tinfoil',
                             'xor.play'
                         ],
-                        isStable)
+                        cron.channel)
                     await this._createPackage(version, 'sdfiles', cron.channel, results.numberOfFiles, results.path)
 
                     console.log(`Build the bundle for hekate...`)
@@ -114,7 +113,7 @@ class Updater {
                             'hbmenu',
                             'must_have'
                         ],
-                        isStable)
+                        cron.channel)
                     await this._createPackage(version, 'hekate', cron.channel, results.numberOfFiles, results.path)
 
                     console.log(`Build the bundle for atmosphere...`)
@@ -125,7 +124,7 @@ class Updater {
                             'hbmenu',
                             'must_have'
                         ],
-                        isStable)
+                        cron.channel)
                     await this._createPackage(version, 'atmosphere', cron.channel, results.numberOfFiles, results.path)
 
                     console.log(`Build the bundle for reinx...`)
@@ -136,7 +135,7 @@ class Updater {
                             'must_have',
                             'reinx'
                         ],
-                        isStable)
+                        cron.channel)
                     await this._createPackage(version, 'reinx', cron.channel, results.numberOfFiles, results.path)
                 } catch (e) {
                     reject(e)
@@ -318,7 +317,7 @@ class Updater {
         });
     }
 
-    _buildBundle(name, modules, isStable) {
+    _buildBundle(name, modules, channel) {
         return new Promise(async (resolve, reject) => {
             const tmpDir = `${ __dirname }/temp`
             if (fs.existsSync(tmpDir)) {
@@ -342,7 +341,7 @@ class Updater {
             }
 
             try {
-                await this._archive('zip', tmpDir, `${ __dirname }/res/${ name }-${ (isStable) ? 'stable' : 'bleedingedge' }.zip`)
+                await this._archive('zip', tmpDir, `${ __dirname }/res/${ name }-${ channel }.zip`)
             } catch (e) {
                 reject(`Problem creating legacy zip file: ${ e }`)
                 return

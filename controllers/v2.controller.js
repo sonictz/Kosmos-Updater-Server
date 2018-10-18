@@ -30,7 +30,7 @@ function _validateLauncher(launcher) {
 
 function _validateChannel(channel) {
     if (channel.toLowerCase() === 'bleeding-edge') {
-        return 'bleedingedge'
+        return 'bleeding-edge'
     } else if (channel.toLowerCase() === 'stable') {
         return 'stable'
     }
