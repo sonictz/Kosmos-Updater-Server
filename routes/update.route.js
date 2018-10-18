@@ -20,6 +20,6 @@ const update_controller = require('../controllers/update.controller')
 
 const router = express.Router()
 
-router.get('/update', update_controller.getUpdate)
+router.post('/update', update_controller.postUpdate)
 
 module.exports = router

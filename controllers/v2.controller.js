@@ -102,5 +102,5 @@ module.exports.getDownload = (req, res) => {
 }
 
 module.exports.postUpdate = (req, res) => {
-    return update_controller.getUpdate(req, res)
+    return update_controller.postUpdate(req, res)
 }

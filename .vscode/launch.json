@@ -13,16 +13,8 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Updater (Stable)",
-            "program": "${workspaceFolder}/update.js",
-            "args": [ "stable" ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Updater (Bleeding Edge)",
-            "program": "${workspaceFolder}/update.js",
-            "args": [ "bleeding-edge" ]
+            "name": "Launch Updater",
+            "program": "${workspaceFolder}/cron.js"
         }
     ]
 }

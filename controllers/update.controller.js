@@ -19,7 +19,7 @@ const crypto = require('crypto')
 const Cron = require('../models/cron.model')
 const config = require('../config.json')
 
-module.exports.getUpdate = (req, res) => {
+module.exports.postUpdate = (req, res) => {
     const userAgent = req.headers['user-agent']
     if (userAgent === undefined || !userAgent.startsWith('GitHub-Hookshot/')) {
         res.status(401)
@@ -89,7 +89,7 @@ module.exports.getUpdate = (req, res) => {
                     res.send('Queued update to bleeding-edge files.')            
                 })    
             } else {
-                Cron.findByIdAndUpdate(cron._id, { $set: { shouldRun: true }}, (err) => {
+                Cron.findOneAndUpdate({ _id: cron._id }, { $set: { shouldRun: true }}, (err) => {
                     if (err) {
                         res.status(500)
                         res.send('Unable to queue update to bleeding-edge files.')
