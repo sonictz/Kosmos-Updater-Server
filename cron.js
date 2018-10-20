@@ -89,14 +89,17 @@ class Updater {
                         'sdfiles',
                         [
                             'appstore',
-                            'atmosphere_hekate',
                             'bootlogo',
+                            'checkpoint',
                             'edizon',
                             'es_patches',
-                            'featured',
+                            'fusee_atmosphere',
                             'hbmenu',
+                            'kip_patches',
                             'must_have',
                             'reinx',
+                            'sdfiles_toolkit',
+                            'sunpresence',
                             'switchpresence',
                             'sys-ftpd',
                             'sys-netcheat',
@@ -111,7 +114,8 @@ class Updater {
                         'hekate',
                         [
                             'hbmenu',
-                            'must_have'
+                            'must_have',
+                            'sdfiles_toolkit'
                         ],
                         cron.channel)
                     await this._createPackage(version, 'hekate', cron.channel, results.numberOfFiles, results.path)
@@ -122,7 +126,8 @@ class Updater {
                         [
                             'atmosphere_hekate',
                             'hbmenu',
-                            'must_have'
+                            'must_have',
+                            'sdfiles_toolkit'
                         ],
                         cron.channel)
                     await this._createPackage(version, 'atmosphere', cron.channel, results.numberOfFiles, results.path)
@@ -133,7 +138,8 @@ class Updater {
                         [
                             'hbmenu',
                             'must_have',
-                            'reinx'
+                            'reinx',
+                            'sdfiles_toolkit'
                         ],
                         cron.channel)
                     await this._createPackage(version, 'reinx', cron.channel, results.numberOfFiles, results.path)
@@ -332,11 +338,13 @@ class Updater {
 
             for (let i = 0; i < modules.length; i++) {
                 const module = modules[i];
-                try {
-                    await copy(`${ __dirname }/SDFilesSwitch/Modules/${ module }`, tmpDir)
-                } catch (e) {
-                    reject(`Problem copying module: ${ e }`)
-                    return
+                if (fs.existsSync(`${ __dirname }/SDFilesSwitch/Modules/${ module }`)) {
+                    try {
+                        await copy(`${ __dirname }/SDFilesSwitch/Modules/${ module }`, tmpDir)
+                    } catch (e) {
+                        reject(`Problem copying module: ${ e }`)
+                        return
+                    }
                 }
             }
 
