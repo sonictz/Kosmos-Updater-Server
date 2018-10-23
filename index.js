@@ -23,7 +23,7 @@ const update = require('./routes/update.route')
 const v3 = require('./routes/v3.route')
 
 // Setup MongoDB
-mongoose.connect(config.mongodb, { useNewUrlParser: true })
+mongoose.connect(config.mongodb, { useNewUrlParser: true, useFindAndModify: false })
 mongoose.Promise = global.Promise
 const db = mongoose.connection
 db.on('error', (err) => {
