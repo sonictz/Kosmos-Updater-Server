@@ -97,14 +97,28 @@ module.exports.getPackage = (req, res) => {
             return
         }
 
-        const filePath = package.path
+        const type = req.query.type || 'tar'
+        if (type !== 'tar' && type !== 'zip') {
+            res.status(404)
+            res.setHeader('Server', serverHeader)
+            res.send()
+            return
+        }
+
+        let filePath = package.path
+        if (filePath.endsWith('.tar')) {
+            filePath = filePath.replace('.tar', '.' + type)
+        } else {
+            filePath += '.' + type
+        }
+
         const stat = fs.statSync(filePath)
         
         res.status(200)
         res.setHeader('Server', serverHeader)
-        res.setHeader('Content-Type', 'application/tar')
+        res.setHeader('Content-Type', `application/${ type }`)
         res.setHeader('Content-Length', stat.size)
-        res.setHeader('Content-Disposition', 'attachment; filename="' + package.bundle + '-' + package.channel + '.tar"')
+        res.setHeader('Content-Disposition', `attachment; filename="${ package.bundle }-${ package.channel }.${ type }"`)
         res.setHeader('X-Version-Number', package.version)
         res.setHeader('X-Number-Of-Files', package.numberOfFiles)
 

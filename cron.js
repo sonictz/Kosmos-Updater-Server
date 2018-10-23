@@ -81,12 +81,8 @@ class Updater {
                     console.log(`Get the latest version for ${ cron.channel }...`)
                     const version = await this._getLatestVersion((cron.channel === 'stable'), repo)
 
-                    console.log(`Write the version to file for legacy APIs...`)
-                    await this._writeVersion(version, `${ __dirname }/res/${ cron.channel }.txt`)
-
                     console.log(`Build the bundle for sdfiles...`)
                     results = await this._buildBundle(
-                        'sdfiles',
                         [
                             'appstore',
                             'bootlogo',
@@ -105,43 +101,46 @@ class Updater {
                             'sys-netcheat',
                             'tinfoil',
                             'xor.play'
-                        ],
-                        cron.channel)
+                        ])
                     await this._createPackage(version, 'sdfiles', cron.channel, results.numberOfFiles, results.path)
 
                     console.log(`Build the bundle for hekate...`)
                     results = await this._buildBundle(
-                        'hekate',
                         [
                             'hbmenu',
                             'must_have',
                             'sdfiles_toolkit'
-                        ],
-                        cron.channel)
+                        ])
                     await this._createPackage(version, 'hekate', cron.channel, results.numberOfFiles, results.path)
+
+                    console.log(`Build the bundle for hekate-nogc...`)
+                    results = await this._buildBundle(
+                        [
+                            'hbmenu',
+                            'must_have',
+                            'nogc',
+                            'sdfiles_toolkit'
+                        ])
+                    await this._createPackage(version, 'hekate-nogc', cron.channel, results.numberOfFiles, results.path)
 
                     console.log(`Build the bundle for atmosphere...`)
                     results = await this._buildBundle(
-                        'atmosphere',
                         [
                             'atmosphere_hekate',
                             'hbmenu',
                             'must_have',
                             'sdfiles_toolkit'
-                        ],
-                        cron.channel)
+                        ])
                     await this._createPackage(version, 'atmosphere', cron.channel, results.numberOfFiles, results.path)
 
                     console.log(`Build the bundle for reinx...`)
                     results = await this._buildBundle(
-                        'reinx',
                         [
                             'hbmenu',
                             'must_have',
                             'reinx',
                             'sdfiles_toolkit'
-                        ],
-                        cron.channel)
+                        ])
                     await this._createPackage(version, 'reinx', cron.channel, results.numberOfFiles, results.path)
                 } catch (e) {
                     reject(e)
@@ -307,23 +306,7 @@ class Updater {
         return tags.find((e) => e.versionNumber == latestVersion).tagName
     }
 
-    _writeVersion(version, path) {
-        return new Promise((resolve, reject) => {
-            if (fs.existsSync(path))
-                fs.unlinkSync(path)
-        
-            fs.writeFile(path, version, (err) => {
-                if (err) {
-                    reject(err)
-                }
-                else {
-                    resolve()
-                }
-            })
-        });
-    }
-
-    _buildBundle(name, modules, channel) {
+    _buildBundle(modules) {
         return new Promise(async (resolve, reject) => {
             const tmpDir = `${ __dirname }/temp`
             if (fs.existsSync(tmpDir)) {
@@ -340,7 +323,7 @@ class Updater {
                 const module = modules[i];
                 if (fs.existsSync(`${ __dirname }/SDFilesSwitch/Modules/${ module }`)) {
                     try {
-                        await copy(`${ __dirname }/SDFilesSwitch/Modules/${ module }`, tmpDir)
+                        await copy(`${ __dirname }/SDFilesSwitch/Modules/${ module }`, tmpDir, { overwrite: true })
                     } catch (e) {
                         reject(`Problem copying module: ${ e }`)
                         return
@@ -348,16 +331,17 @@ class Updater {
                 }
             }
 
+            const path = `${ __dirname }/res/${ uuidv4() }`
+
             try {
-                await this._archive('zip', tmpDir, `${ __dirname }/res/${ name }-${ channel }.zip`)
+                await this._archive('zip', tmpDir, `${ path }.zip`)
             } catch (e) {
-                reject(`Problem creating legacy zip file: ${ e }`)
+                reject(`Problem creating zip file: ${ e }`)
                 return
             }
 
-            const path = `${ __dirname }/res/${ uuidv4() }.tar`
             try {
-                await this._archive('tar', tmpDir, path)
+                await this._archive('tar', tmpDir, `${ path }.tar`)
             } catch (e) {
                 reject(`Problem creating tar file: ${ e }`)
                 return
