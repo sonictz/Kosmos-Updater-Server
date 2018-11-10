@@ -1,7 +1,7 @@
 {
-  "name": "sdfile-updater",
+  "name": "kosmos-updater",
   "version": "1.0.0",
-  "description": "Backend Server Portion of SDFile Updater.",
+  "description": "Backend Server Portion of Kosmos Updater.",
   "main": "index.js",
   "author": {
     "name": "Steven Mattera",

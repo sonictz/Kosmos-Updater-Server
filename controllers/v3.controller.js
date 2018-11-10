@@ -1,4 +1,4 @@
-// SDFile Updater Server
+// Kosmos Updater Server
 // Copyright (C) 2018 Steven Mattera
 //
 // This program is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ module.exports.getApp = (req, res) => {
         res.setHeader('Server', serverHeader)
         res.setHeader('Content-Type', 'application/octet-stream')
         res.setHeader('Content-Length', stat.size)
-        res.setHeader('Content-Disposition', 'attachment; filename="SDFilesUpdater.nro"')
+        res.setHeader('Content-Disposition', 'attachment; filename="KosmosUpdater.nro"')
         fs.createReadStream(app.path).pipe(res)
     })
 }

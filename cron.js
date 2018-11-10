@@ -1,4 +1,4 @@
-// SDFile Updater Server
+// Kosmos Updater Server
 // Copyright (C) 2018 Steven Mattera
 //
 // This program is free software; you can redistribute it and/or
@@ -81,7 +81,7 @@ class Updater {
                     console.log(`Get the latest version for ${ cron.channel }...`)
                     const version = await this._getLatestVersion((cron.channel === 'stable'), repo)
 
-                    console.log(`Build the bundle for sdfiles...`)
+                    console.log(`Build the bundle for kosmos...`)
                     results = await this._buildBundle(
                         [
                             'appstore',
@@ -93,7 +93,6 @@ class Updater {
                             'hbmenu',
                             'kip_patches',
                             'must_have',
-                            'reinx',
                             'sdfiles_toolkit',
                             'sunpresence',
                             'switchpresence',
@@ -102,7 +101,7 @@ class Updater {
                             'tinfoil',
                             'xor.play'
                         ])
-                    await this._createPackage(version, 'sdfiles', cron.channel, results.numberOfFiles, results.path)
+                    await this._createPackage(version, 'kosmos', cron.channel, results.numberOfFiles, results.path)
 
                     console.log(`Build the bundle for hekate...`)
                     results = await this._buildBundle(
@@ -113,16 +112,6 @@ class Updater {
                         ])
                     await this._createPackage(version, 'hekate', cron.channel, results.numberOfFiles, results.path)
 
-                    console.log(`Build the bundle for hekate-nogc...`)
-                    results = await this._buildBundle(
-                        [
-                            'hbmenu',
-                            'must_have',
-                            'nogc',
-                            'sdfiles_toolkit'
-                        ])
-                    await this._createPackage(version, 'hekate-nogc', cron.channel, results.numberOfFiles, results.path)
-
                     console.log(`Build the bundle for atmosphere...`)
                     results = await this._buildBundle(
                         [
@@ -132,16 +121,6 @@ class Updater {
                             'sdfiles_toolkit'
                         ])
                     await this._createPackage(version, 'atmosphere', cron.channel, results.numberOfFiles, results.path)
-
-                    console.log(`Build the bundle for reinx...`)
-                    results = await this._buildBundle(
-                        [
-                            'hbmenu',
-                            'must_have',
-                            'reinx',
-                            'sdfiles_toolkit'
-                        ])
-                    await this._createPackage(version, 'reinx', cron.channel, results.numberOfFiles, results.path)
                 } catch (e) {
                     reject(e)
                     return
@@ -212,10 +191,10 @@ class Updater {
             }
 
             // Clone the repo if it doesn't exists.
-            if (!fs.existsSync(`${ __dirname }/SDFilesSwitch`)) {
+            if (!fs.existsSync(`${ __dirname }/Kosmos`)) {
                 try {
                     console.log('Checking out repo...')
-                    await git().clone('https://github.com/tumGER/SDFilesSwitch.git', './SDFilesSwitch')
+                    await git().clone('https://github.com/AtlasNX/Kosmos.git', './Kosmos')
                 }
                 catch (e) {
                     reject(`Problem cloning repo: ${ e }`)
@@ -224,7 +203,7 @@ class Updater {
             }
 
             // Create our repo object and pull the latest.
-            const repo = git(`${ __dirname }/SDFilesSwitch`)
+            const repo = git(`${ __dirname }/Kosmos`)
             try {
                 console.log('Checking out the master branch...')
                 await repo.checkout('master')
@@ -321,9 +300,9 @@ class Updater {
 
             for (let i = 0; i < modules.length; i++) {
                 const module = modules[i];
-                if (fs.existsSync(`${ __dirname }/SDFilesSwitch/Modules/${ module }`)) {
+                if (fs.existsSync(`${ __dirname }/Kosmos/Modules/${ module }`)) {
                     try {
-                        await copy(`${ __dirname }/SDFilesSwitch/Modules/${ module }`, tmpDir, { overwrite: true })
+                        await copy(`${ __dirname }/Kosmos/Modules/${ module }`, tmpDir, { overwrite: true })
                     } catch (e) {
                         reject(`Problem copying module: ${ e }`)
                         return
