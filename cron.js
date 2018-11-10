@@ -89,17 +89,14 @@ class Updater {
                             'checkpoint',
                             'edizon',
                             'es_patches',
-                            'fusee_atmosphere',
                             'hbmenu',
                             'kip_patches',
                             'must_have',
                             'sdfiles_toolkit',
                             'sunpresence',
-                            'switchpresence',
                             'sys-ftpd',
                             'sys-netcheat',
-                            'tinfoil',
-                            'xor.play'
+                            'tinfoil'
                         ])
                     await this._createPackage(version, 'kosmos', cron.channel, results.numberOfFiles, results.path)
 
@@ -116,6 +113,7 @@ class Updater {
                     results = await this._buildBundle(
                         [
                             'atmosphere_hekate',
+                            'fusee_atmosphere',
                             'hbmenu',
                             'must_have',
                             'sdfiles_toolkit'
