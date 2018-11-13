@@ -14,6 +14,7 @@
     "body-parser": "^1.18.3",
     "count-files": "^2.6.2",
     "express": "^4.16.3",
+    "influx": "^5.0.7",
     "mongoose": "^5.3.4",
     "recursive-copy": "^2.0.9",
     "rmfr": "^2.0.0",

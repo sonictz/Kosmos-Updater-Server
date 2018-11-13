@@ -317,13 +317,6 @@ class Updater {
                 return
             }
 
-            try {
-                await this._archive('tar', tmpDir, `${ path }.tar`)
-            } catch (e) {
-                reject(`Problem creating tar file: ${ e }`)
-                return
-            }
-
             let stats;
             try {
                 stats = await this._getNumberOfFiles(tmpDir)
