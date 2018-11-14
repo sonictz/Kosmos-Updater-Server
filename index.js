@@ -16,45 +16,13 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 const express = require('express')
-const bodyParser = require('body-parser')
-const mongoose = require('mongoose')
-const influx = require('influx')
 const config = require('./config.json')
-const update = require('./routes/update.route')
 const v1 = require('./routes/v1.route')
 const v2 = require('./routes/v2.route')
 const v3 = require('./routes/v3.route')
 
-// Setup MongoDB
-mongoose.connect(config.mongodb, { useNewUrlParser: true, useFindAndModify: false })
-mongoose.Promise = global.Promise
-const db = mongoose.connection
-db.on('error', (err) => {
-    console.error(`MongoDB connection error: ${ err }`)
-})
-
-// Setup Influx
-const influxdb = new influx.InfluxDB(config.influxdb)
-
 // Setup Express
 const app = express()
-app.use(bodyParser.json())
-app.use(update)
-app.use((req, res, next) => {
-    if (!influxdb) {
-        next();
-    }
-
-    req.influxdb = influxdb;
-
-    influxdb.writeMeasurement('visit', [{
-        tags: { path: req.path },
-        fields: { count: 1 },
-        timestamp: new Date()
-    }])
-
-    next()
-})
 app.use('/v1', v1)
 app.use('/v2', v2)
 app.use('/v3', v3)

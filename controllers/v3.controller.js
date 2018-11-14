@@ -16,105 +16,38 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 const fs = require('fs')
-const App = require('../models/app.model')
-const Package = require('../models/package.model')
 const serverHeader = 'SDFU/3.0'
 
 module.exports.getAppVersionNumber = (req, res) => {
-    App.findOne({ channel: 'stable' }).sort({ _id: -1 }).exec((err, app) => {
-        if (err || app === null) {
-            res.status(500)
-            res.setHeader('Server', serverHeader)
-            res.send()
-            return
-        }
-
-        res.status(200)
-        res.setHeader('Server', serverHeader)
-        res.setHeader('Content-Type', 'text/plain')
-        res.setHeader('Content-Length', app.version.length)
-        res.send(app.version)
-    })
+    res.status(200)
+    res.setHeader('Server', serverHeader)
+    res.setHeader('Content-Type', 'text/plain')
+    res.setHeader('Content-Length', 5)
+    res.send('3.0.1')
 }
 
 module.exports.getApp = (req, res) => {
-    App.findOne({ channel: 'stable' }).sort({ _id: -1 }).exec((err, app) => {
-        if (err || app === null) {
-            res.status(500)
-            res.setHeader('Server', serverHeader)
-            res.send()
-            return
-        }
+    const path = `${ __dirname }/../res/KosmosUpdater-301.nro`
+    const stat = fs.statSync(path)
 
-        const stat = fs.statSync(app.path)
-
-        res.status(200)
-        res.setHeader('Server', serverHeader)
-        res.setHeader('Content-Type', 'application/octet-stream')
-        res.setHeader('Content-Length', stat.size)
-        res.setHeader('Content-Disposition', 'attachment; filename="KosmosUpdater.nro"')
-        fs.createReadStream(app.path).pipe(res)
-    })
+    res.status(200)
+    res.setHeader('Server', serverHeader)
+    res.setHeader('Content-Type', 'application/octet-stream')
+    res.setHeader('Content-Length', stat.size)
+    res.setHeader('Content-Disposition', 'attachment; filename="KosmosUpdater.nro"')
+    fs.createReadStream(path).pipe(res)
 }
 
 module.exports.getPackageVersionNumber = (req, res) => {
-    Package.findOne({ channel: req.query.channel }).sort({ _id: -1 }).exec((err, package) => {
-        if (err) {
-            res.status(500)
-            res.setHeader('Server', serverHeader)
-            res.send()
-            return
-        }
-
-        if (package === null) {
-            res.status(404)
-            res.setHeader('Server', serverHeader)
-            res.send()
-            return
-        }
-
-        res.status(200)
-        res.setHeader('Server', serverHeader)
-        res.setHeader('Content-Type', 'text/plain')
-        res.setHeader('Content-Length', package.version.length)
-        res.send(package.version)
-    })
+    res.status(426)
+    res.setHeader('Server', serverHeader)
+    res.send()
+    return
 }
 
-module.exports.getPackage = (req, res) => {
-    Package.findOne({ bundle: req.query.bundle, channel: req.query.channel }).sort({ _id: -1 }).exec((err, package) => {
-        if (err) {
-            res.status(500)
-            res.setHeader('Server', serverHeader)
-            res.send()
-            return
-        }
-
-        if (package === null) {
-            res.status(404)
-            res.setHeader('Server', serverHeader)
-            res.send()
-            return
-        }
-
-        if (req.influxdb) {
-            req.influxdb.writeMeasurement('download', [{
-                tags: { bundle: package.bundle, channel: package.channel },
-                fields: { count: 1 },
-                timestamp: new Date()
-            }])
-        }
-
-        const stat = fs.statSync(package.path + '.zip')
-        
-        res.status(200)
-        res.setHeader('Server', serverHeader)
-        res.setHeader('Content-Type', `application/zip`)
-        res.setHeader('Content-Length', stat.size)
-        res.setHeader('Content-Disposition', `attachment; filename="${ package.bundle }-${ package.channel }.zip"`)
-        res.setHeader('X-Version-Number', package.version)
-        res.setHeader('X-Number-Of-Files', package.numberOfFiles)
-
-        fs.createReadStream(package.path + '.zip').pipe(res)    
-    })
+module.exports.getPackage = (req, res) => { 
+    res.status(426)
+    res.setHeader('Server', serverHeader)
+    res.send()
+    return
 }
