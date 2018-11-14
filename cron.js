@@ -23,7 +23,7 @@ const semver = require('semver')
 const rmfr = require('rmfr')
 const copy = require('recursive-copy')
 const archiver = require('archiver')
-const uuidv4 = require('uuid/v4');
+const uuidv4 = require('uuid/v4')
 const countFiles = require('count-files')
 const Cron = require('./models/cron.model')
 const Package = require('./models/package.model')
@@ -40,7 +40,7 @@ class Updater {
 
     run() {
         return new Promise(async (resolve, reject) => {
-            let crons;
+            let crons
             try {
                 crons = await this._findCronsToRun()
             }
@@ -55,7 +55,7 @@ class Updater {
                 return
             }
 
-            let repo;
+            let repo
             try {
                 repo = await this._setupRepo()
             } catch (e) {
@@ -64,7 +64,7 @@ class Updater {
             }
 
             for (let i = 0; i < crons.length; i++) {
-                const cron = crons[i];
+                const cron = crons[i]
                 console.log(`Running cron for ${ cron.channel }`)
 
                 try {
@@ -76,7 +76,7 @@ class Updater {
                 }
 
                 try {
-                    let results;
+                    let results
 
                     console.log(`Get the latest version for ${ cron.channel }...`)
                     const version = await this._getLatestVersion((cron.channel === 'stable'), repo)
@@ -90,30 +90,17 @@ class Updater {
                             'edizon',
                             'es_patches',
                             'hbmenu',
-                            'kip_patches',
                             'must_have',
                             'sdfiles_toolkit',
-                            'sunpresence',
                             'sys-ftpd',
                             'sys-netcheat',
                             'tinfoil'
                         ])
                     await this._createPackage(version, 'kosmos', cron.channel, results.numberOfFiles, results.path)
 
-                    console.log(`Build the bundle for hekate...`)
-                    results = await this._buildBundle(
-                        [
-                            'hbmenu',
-                            'must_have',
-                            'sdfiles_toolkit'
-                        ])
-                    await this._createPackage(version, 'hekate', cron.channel, results.numberOfFiles, results.path)
-
                     console.log(`Build the bundle for atmosphere...`)
                     results = await this._buildBundle(
                         [
-                            'atmosphere_hekate',
-                            'fusee_atmosphere',
                             'hbmenu',
                             'must_have',
                             'sdfiles_toolkit'
@@ -226,7 +213,7 @@ class Updater {
 
     _getLatestVersion(isStable, repo) {
         return new Promise(async (resolve, reject) => {
-            let version;
+            let version
 
             if (isStable) {
                 try {
@@ -297,7 +284,7 @@ class Updater {
             fs.mkdirSync(tmpDir)
 
             for (let i = 0; i < modules.length; i++) {
-                const module = modules[i];
+                const module = modules[i]
                 if (fs.existsSync(`${ __dirname }/Kosmos/Modules/${ module }`)) {
                     try {
                         await copy(`${ __dirname }/Kosmos/Modules/${ module }`, tmpDir, { overwrite: true })
@@ -317,7 +304,7 @@ class Updater {
                 return
             }
 
-            let stats;
+            let stats
             try {
                 stats = await this._getNumberOfFiles(tmpDir)
             } catch (e) {

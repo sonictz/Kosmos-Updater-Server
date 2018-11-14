@@ -20,13 +20,6 @@ const Cron = require('../models/cron.model')
 const config = require('../config.json')
 
 module.exports.postUpdate = (req, res) => {
-    const userAgent = req.headers['user-agent']
-    if (userAgent === undefined || !userAgent.startsWith('GitHub-Hookshot/')) {
-        res.status(401)
-        res.send('Unauthorized - Incorrect User Agent')
-        return
-    }
-
     const hmac = crypto.createHmac('sha1', config.secret)
     hmac.update(JSON.stringify(req.body))
 

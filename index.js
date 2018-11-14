@@ -21,8 +21,6 @@ const mongoose = require('mongoose')
 const influx = require('influx')
 const config = require('./config.json')
 const update = require('./routes/update.route')
-const v1 = require('./routes/v1.route')
-const v2 = require('./routes/v2.route')
 const v3 = require('./routes/v3.route')
 
 // Setup MongoDB
@@ -39,13 +37,28 @@ const influxdb = new influx.InfluxDB(config.influxdb)
 // Setup Express
 const app = express()
 app.use(bodyParser.json())
-app.use(update)
+
+// Validate user-agent.
 app.use((req, res, next) => {
-    if (!influxdb) {
-        next();
+    const userAgent = req.headers['user-agent']
+    const path = req.path
+
+    console.log(path, userAgent)
+    if ((path.startsWith('/update') && userAgent.startsWith('GitHub-Hookshot/')) || (!path.startsWith('/update') && userAgent.startsWith('kosmos-updater/'))) {
+        next()
     }
 
-    req.influxdb = influxdb;
+    res.status(401)
+    res.send('Unauthorized - Incorrect User Agent')
+})
+
+// Record traffic to InfluxDB
+app.use((req, res, next) => {
+    if (!influxdb) {
+        next()
+    }
+
+    req.influxdb = influxdb
 
     influxdb.writeMeasurement('visit', [{
         tags: { path: req.path },
@@ -55,9 +68,11 @@ app.use((req, res, next) => {
 
     next()
 })
-app.use('/v1', v1)
-app.use('/v2', v2)
+
+// Routes
+app.use(update)
 app.use('/v3', v3)
+
 app.listen(config.portNumber, () => {
     console.log(`Server is listening on ${ config.portNumber }`)
 })
