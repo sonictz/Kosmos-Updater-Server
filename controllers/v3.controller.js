@@ -27,7 +27,7 @@ module.exports.getAppVersionNumber = (req, res) => {
 }
 
 module.exports.getApp = (req, res) => {
-    const path = `${ __dirname }/../res/KosmosUpdater-301.nro`
+    const path = `${ __dirname }/../res/KosmosUpdater-3.0.1.nro`
     const stat = fs.statSync(path)
 
     res.status(200)
