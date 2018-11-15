@@ -43,7 +43,7 @@ app.use((req, res, next) => {
     const userAgent = req.headers['user-agent']
     const path = req.path
 
-    if ((path.startsWith('/update') && userAgent.startsWith('GitHub-Hookshot/')) || (!path.startsWith('/update') && userAgent.startsWith('kosmos-updater/'))) {
+    if ((userAgent && path.startsWith('/update') && userAgent.startsWith('GitHub-Hookshot/')) || (userAgent && !path.startsWith('/update') && userAgent.startsWith('kosmos-updater/'))) {
         next()
         return
     }
