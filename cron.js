@@ -91,7 +91,7 @@ class Updater {
                             'es_patches',
                             'hbmenu',
                             'must_have',
-                            'sdfiles_toolkit',
+                            'kosmos_toolkit',
                             'sys-ftpd',
                             'sys-netcheat',
                             'tinfoil'
@@ -103,7 +103,7 @@ class Updater {
                         [
                             'hbmenu',
                             'must_have',
-                            'sdfiles_toolkit'
+                            'kosmos_toolkit'
                         ])
                     await this._createPackage(version, 'atmosphere', cron.channel, results.numberOfFiles, results.path)
                 } catch (e) {
