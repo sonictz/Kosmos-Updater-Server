@@ -37,6 +37,14 @@ const influxdb = new influx.InfluxDB(config.influxdb)
 // Setup Express
 const app = express()
 app.use(bodyParser.json())
+app.set('etag', false)
+
+// Remove express header and prevent caching
+app.use((req, res, next) => {
+    res.removeHeader('X-Powered-By')
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
+    next()
+})
 
 // Validate user-agent.
 app.use((req, res, next) => {
