@@ -94,6 +94,7 @@ class Updater {
                             'kosmos_toolkit',
                             'sys-ftpd',
                             'sys-netcheat',
+                            'ldn_mitm',
                             'tinfoil'
                         ])
                     await this._createPackage(version, 'kosmos', cron.channel, results.numberOfFiles, results.path)
