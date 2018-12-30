@@ -95,7 +95,7 @@ class Updater {
                             'sys-ftpd',
                             'sys-netcheat',
                             'ldn_mitm',
-                            'tinfoil'
+                            'goldleaf'
                         ])
                     await this._createPackage(version, 'kosmos', cron.channel, results.numberOfFiles, results.path)
 
@@ -103,8 +103,7 @@ class Updater {
                     results = await this._buildBundle(
                         [
                             'hbmenu',
-                            'must_have',
-                            'kosmos_toolkit'
+                            'must_have'
                         ])
                     await this._createPackage(version, 'atmosphere', cron.channel, results.numberOfFiles, results.path)
                 } catch (e) {
