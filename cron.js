@@ -89,13 +89,15 @@ class Updater {
                             'checkpoint',
                             'edizon',
                             'es_patches',
+                            'goldleaf',
                             'hbmenu',
-                            'must_have',
-                            'kosmos_toolkit',
-                            'sys-ftpd',
-                            'sys-netcheat',
                             'ldn_mitm',
-                            'goldleaf'
+                            'lockpick',
+                            'kosmos_toolkit',
+                            'must_have',
+                            'sd_setup',
+                            'sys-ftpd',
+                            'sys-netcheat'
                         ])
                     await this._createPackage(version, 'kosmos', cron.channel, results.numberOfFiles, results.path)
 
