@@ -1,5 +1,5 @@
 // Kosmos Updater Server
-// Copyright (C) 2018 Steven Mattera
+// Copyright (C) 2019 Steven Mattera
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -16,13 +16,14 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 const express = require('express')
-const v3_controller = require('../controllers/v3.controller')
+const V3Controller = require('../controllers/v3.controller')
 
 const router = express.Router()
+const controller = new V4Controller();
 
-router.get('/app', v3_controller.getApp)
-router.get('/app/version-number', v3_controller.getAppVersionNumber)
-router.get('/package', v3_controller.getPackage)
-router.get('/package/version-number', v3_controller.getPackageVersionNumber)
+router.get('/app', controller.getApp)
+router.get('/app/version-number', controller.getAppVersionNumber)
+router.get('/package', controller.getPackage)
+router.get('/package/version-number', controller.getPackageVersionNumber)
 
 module.exports = router

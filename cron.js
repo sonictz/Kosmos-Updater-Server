@@ -1,5 +1,5 @@
 // Kosmos Updater Server
-// Copyright (C) 2018 Steven Mattera
+// Copyright (C) 2019 Steven Mattera
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -27,6 +27,8 @@ const uuidv4 = require('uuid/v4')
 const countFiles = require('count-files')
 const Cron = require('./models/cron.model')
 const Package = require('./models/package.model')
+const Bundle = require('./models/bundle.model')
+const Payload = require('./models/payload.model')
 
 class Updater {
     constructor() {
@@ -81,33 +83,16 @@ class Updater {
                     console.log(`Get the latest version for ${ cron.channel }...`)
                     const version = await this._getLatestVersion((cron.channel === 'stable'), repo)
 
-                    console.log(`Build the bundle for kosmos...`)
-                    results = await this._buildBundle(
-                        [
-                            'appstore',
-                            'bootlogo',
-                            'checkpoint',
-                            'edizon',
-                            'es_patches',
-                            'goldleaf',
-                            'hbmenu',
-                            'ldn_mitm',
-                            'lockpick',
-                            'kosmos_toolkit',
-                            'must_have',
-                            'sd_setup',
-                            'sys-ftpd',
-                            'sys-netcheat'
-                        ])
-                    await this._createPackage(version, 'kosmos', cron.channel, results.numberOfFiles, results.path)
+                    const bundles = await this._findBundles()
+                    bundles.forEach((bundle) => {
+                        console.log(`Build the bundle for "${ bundle.name }"...`)
+                        results = await this._buildBundle(bundle)
+                        await this._createPackage(version, bundle.name, cron.channel, results.numberOfFiles, results.path)
 
-                    console.log(`Build the bundle for atmosphere...`)
-                    results = await this._buildBundle(
-                        [
-                            'hbmenu',
-                            'must_have'
-                        ])
-                    await this._createPackage(version, 'atmosphere', cron.channel, results.numberOfFiles, results.path)
+                        // TODO: get payloads.
+                        // results = await this._buildPayload(bundle)
+                        // await this._createPayload(version, bundle.name, cron.channel, results.path)
+                    })
                 } catch (e) {
                     reject(e)
                     return
@@ -131,7 +116,7 @@ class Updater {
                     reject(err)
                     return
                 }
-    
+
                 resolve(crons)
             })
         })
@@ -143,8 +128,21 @@ class Updater {
                 if (err) {
                     reject(err)
                 }
-    
+
                 resolve()
+            })
+        })
+    }
+
+    _findBundles() {
+        return new Promise((resolve, reject) => {
+            Bundle.find({}, (err, bundles) => {
+                if (err) {
+                    reject(err)
+                    return
+                }
+
+                resolve(bundles)
             })
         })
     }
@@ -161,6 +159,24 @@ class Updater {
             pkg.save((err) => {
                 if (err) {
                     reject(`Unable to save package to MongoDB: ${ err }`)
+                    return
+                }
+                resolve()
+            })
+        })
+    }
+
+    _createPayload(version, bundle, channel, path) {
+        return new Promise((resolve, reject) => {
+            let pkg = new Payload({
+                version,
+                bundle,
+                channel,
+                path
+            })
+            pkg.save((err) => {
+                if (err) {
+                    reject(`Unable to save payload to MongoDB: ${ err }`)
                     return
                 }
                 resolve()
@@ -247,32 +263,32 @@ class Updater {
         const tags = result.all.map((e) => {
             // Remove any letters from the tag name.
             let versionNumber = e.replace(/[^0-9.]/g, '')
-    
+
             // Remove any preceding zeros.
             versionNumber = versionNumber.split('.').map((e) => parseInt(e).toString()).join('.')
-    
+
             // Normailze the versions.
             switch((versionNumber.match(/[.]/g) || []).length) {
                 case 0:
                     versionNumber += '.0.0'
                     break
-    
+
                 case 1:
                     versionNumber += '.0'
                     break
             }
-    
+
             return {
                 versionNumber,
                 tagName: e
             }
         })
-    
+
         const latestVersion = semver.maxSatisfying(tags.map((e) => e.versionNumber), '*')
         return tags.find((e) => e.versionNumber == latestVersion).tagName
     }
 
-    _buildBundle(modules) {
+    _buildBundle(bundle) {
         return new Promise(async (resolve, reject) => {
             const tmpDir = `${ __dirname }/temp`
             if (fs.existsSync(tmpDir)) {
@@ -285,8 +301,7 @@ class Updater {
             }
             fs.mkdirSync(tmpDir)
 
-            for (let i = 0; i < modules.length; i++) {
-                const module = modules[i]
+            bundle.modules.forEach(module => {
                 if (fs.existsSync(`${ __dirname }/Kosmos/Modules/${ module }`)) {
                     try {
                         await copy(`${ __dirname }/Kosmos/Modules/${ module }`, tmpDir, { overwrite: true })
@@ -295,7 +310,7 @@ class Updater {
                         return
                     }
                 }
-            }
+            });
 
             const path = `${ __dirname }/res/${ uuidv4() }`
 
@@ -329,7 +344,7 @@ class Updater {
         return new Promise((resolve, reject) => {
             if (fs.existsSync(path))
                 fs.unlinkSync(path)
-        
+
             const output = fs.createWriteStream(path)
             const archive = archiver(type, (type === 'zip') ? {
                 zlib: { level: 9 }
@@ -343,15 +358,15 @@ class Updater {
                     resolve()
                 }
             })
-        
+
             archive.on('warning', (err) => {
                 console.log('Bundle Warning: ', path, ' - ', err)
             })
-        
+
             archive.on('error', (err) => {
                 console.log('Bundle Error: ', path, ' - ', err)
             })
-        
+
             archive.pipe(output)
             archive.directory(directory, false)
             archive.finalize()

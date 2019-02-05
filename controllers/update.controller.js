@@ -1,5 +1,5 @@
 // Kosmos Updater Server
-// Copyright (C) 2018 Steven Mattera
+// Copyright (C) 2019 Steven Mattera
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -46,10 +46,10 @@ module.exports.postUpdate = (req, res) => {
                         res.send('Unable to queue update to stable files.')
                         return
                     }
-                    
+
                     res.status(200)
-                    res.send('Queued update to stable files.')            
-                })    
+                    res.send('Queued update to stable files.')
+                })
             } else {
                 Cron.findByIdAndUpdate(cron._id, { $set: { shouldRun: true }}, (err) => {
                     if (err) {
@@ -59,7 +59,7 @@ module.exports.postUpdate = (req, res) => {
                     }
 
                     res.status(200)
-                    res.send('Queued update to stable files.')            
+                    res.send('Queued update to stable files.')
                 })
             }
         })
@@ -77,10 +77,10 @@ module.exports.postUpdate = (req, res) => {
                         res.send('Unable to queue update to bleeding-edge files.')
                         return
                     }
-                    
+
                     res.status(200)
-                    res.send('Queued update to bleeding-edge files.')            
-                })    
+                    res.send('Queued update to bleeding-edge files.')
+                })
             } else {
                 Cron.findOneAndUpdate({ _id: cron._id }, { $set: { shouldRun: true }}, (err) => {
                     if (err) {
@@ -90,7 +90,7 @@ module.exports.postUpdate = (req, res) => {
                     }
 
                     res.status(200)
-                    res.send('Queued update to bleeding-edge files.')            
+                    res.send('Queued update to bleeding-edge files.')
                 })
             }
         })

@@ -19,10 +19,11 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
-let AppSchema = new Schema({
+let PayloadSchema = new Schema({
     version: { type: String, required: true, max: 40 },
+    bundle: { type: String, required: true, max: 15 },
     channel: { type: String, required: true, max: 15 },
     path: { type: String, required: true }
 })
 
-module.exports = mongoose.model('App', AppSchema)
+module.exports = mongoose.model('Payload', PayloadSchema)

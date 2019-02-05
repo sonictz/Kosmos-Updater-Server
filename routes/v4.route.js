@@ -15,14 +15,17 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-const mongoose = require('mongoose')
+const express = require('express')
+const V4Controller = require('../controllers/v4.controller')
 
-const Schema = mongoose.Schema
+const router = express.Router()
+const controller = new V4Controller();
 
-let AppSchema = new Schema({
-    version: { type: String, required: true, max: 40 },
-    channel: { type: String, required: true, max: 15 },
-    path: { type: String, required: true }
-})
+router.get('/app', controller.getApp)
+router.get('/app/version-number', controller.getAppVersionNumber)
+router.get('/bundle', controller.getBundles)
+router.get('/package', controller.getPackage)
+router.get('/package/version-number', controller.getPackageVersionNumber)
+router.get('/payload', controller.getPayload)
 
-module.exports = mongoose.model('App', AppSchema)
+module.exports = router
