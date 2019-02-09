@@ -1,0 +1,700 @@
+{
+	"info": {
+		"_postman_id": "995cc252-6f5b-45e0-8496-10e078aa2029",
+		"name": "Kosmos Updater Server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Version 3 APIs",
+			"item": [
+				{
+					"name": "App",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "{{userAgent}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiVersion}}/app",
+							"host": [
+								"{{baseUrl}}{{apiVersion}}"
+							],
+							"path": [
+								"app"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "App Version Number",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "{{userAgent}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiVersion}}/app/version-number",
+							"host": [
+								"{{baseUrl}}{{apiVersion}}"
+							],
+							"path": [
+								"app",
+								"version-number"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Package - Bleeding Edge Kosmos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"type": "text",
+								"value": "{{userAgent}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiVersion}}/package?bundle=kosmos&channel=bleeding-edge",
+							"host": [
+								"{{baseUrl}}{{apiVersion}}"
+							],
+							"path": [
+								"package"
+							],
+							"query": [
+								{
+									"key": "bundle",
+									"value": "kosmos"
+								},
+								{
+									"key": "channel",
+									"value": "bleeding-edge"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Package - Bleeding Edge Atmosphere",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"type": "text",
+								"value": "{{userAgent}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiVersion}}/package?bundle=atmosphere&channel=bleeding-edge",
+							"host": [
+								"{{baseUrl}}{{apiVersion}}"
+							],
+							"path": [
+								"package"
+							],
+							"query": [
+								{
+									"key": "bundle",
+									"value": "atmosphere"
+								},
+								{
+									"key": "channel",
+									"value": "bleeding-edge"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Package - Stable Kosmos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"type": "text",
+								"value": "{{userAgent}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiVersion}}/package?bundle=kosmos&channel=stable",
+							"host": [
+								"{{baseUrl}}{{apiVersion}}"
+							],
+							"path": [
+								"package"
+							],
+							"query": [
+								{
+									"key": "bundle",
+									"value": "kosmos"
+								},
+								{
+									"key": "channel",
+									"value": "stable"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Package - Stable Atmosphere",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"type": "text",
+								"value": "{{userAgent}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiVersion}}/package?bundle=atmosphere&channel=stable",
+							"host": [
+								"{{baseUrl}}{{apiVersion}}"
+							],
+							"path": [
+								"package"
+							],
+							"query": [
+								{
+									"key": "bundle",
+									"value": "atmosphere"
+								},
+								{
+									"key": "channel",
+									"value": "stable"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Package Version Number - Bleeding Edge",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"type": "text",
+								"value": "{{userAgent}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiVersion}}/package/version-number?channel=bleeding-edge",
+							"host": [
+								"{{baseUrl}}{{apiVersion}}"
+							],
+							"path": [
+								"package",
+								"version-number"
+							],
+							"query": [
+								{
+									"key": "channel",
+									"value": "bleeding-edge"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Package Version Number - Stable",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"type": "text",
+								"value": "{{userAgent}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiVersion}}/package/version-number?channel=stable",
+							"host": [
+								"{{baseUrl}}{{apiVersion}}"
+							],
+							"path": [
+								"package",
+								"version-number"
+							],
+							"query": [
+								{
+									"key": "channel",
+									"value": "stable"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1afa6f22-4faa-4573-969e-dea45091acf6",
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"apiVersion\", \"v3\");"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "e4a2b290-07fd-45d2-9257-751e9b5478f6",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Version 4 APIs",
+			"item": [
+				{
+					"name": "App",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "{{userAgent}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiVersion}}/app",
+							"host": [
+								"{{baseUrl}}{{apiVersion}}"
+							],
+							"path": [
+								"app"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "App Version Number",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "{{userAgent}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiVersion}}/app/version-number",
+							"host": [
+								"{{baseUrl}}{{apiVersion}}"
+							],
+							"path": [
+								"app",
+								"version-number"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Bundles",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "{{userAgent}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiVersion}}/bundle",
+							"host": [
+								"{{baseUrl}}{{apiVersion}}"
+							],
+							"path": [
+								"bundle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Package - Bleeding Edge",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"type": "text",
+								"value": "{{userAgent}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiVersion}}/package?bundle=&channel=bleeding-edge",
+							"host": [
+								"{{baseUrl}}{{apiVersion}}"
+							],
+							"path": [
+								"package"
+							],
+							"query": [
+								{
+									"key": "bundle",
+									"value": ""
+								},
+								{
+									"key": "channel",
+									"value": "bleeding-edge"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Package - Stable",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"type": "text",
+								"value": "{{userAgent}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiVersion}}/package?bundle=&channel=stable",
+							"host": [
+								"{{baseUrl}}{{apiVersion}}"
+							],
+							"path": [
+								"package"
+							],
+							"query": [
+								{
+									"key": "bundle",
+									"value": ""
+								},
+								{
+									"key": "channel",
+									"value": "stable"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Payload - Bleeding Edge",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"type": "text",
+								"value": "{{userAgent}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiVersion}}/payload?bundle=&channel=bleeding-edge",
+							"host": [
+								"{{baseUrl}}{{apiVersion}}"
+							],
+							"path": [
+								"payload"
+							],
+							"query": [
+								{
+									"key": "bundle",
+									"value": ""
+								},
+								{
+									"key": "channel",
+									"value": "bleeding-edge"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Payload - Stable",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"type": "text",
+								"value": "{{userAgent}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiVersion}}/payload?bundle=&channel=stable",
+							"host": [
+								"{{baseUrl}}{{apiVersion}}"
+							],
+							"path": [
+								"payload"
+							],
+							"query": [
+								{
+									"key": "bundle",
+									"value": ""
+								},
+								{
+									"key": "channel",
+									"value": "stable"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "2edd8738-c55c-4a25-9fa0-580ad1c17652",
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"apiVersion\", \"v4\");"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "94e6f83b-72b4-40cc-9322-bac305af4811",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Update - Release",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "47b0659d-48ab-4227-a171-df8b460133bf",
+						"exec": [
+							"let secretKey = pm.environment.get(\"secretKey\");",
+							"let hmacDigest = CryptoJS.HmacSHA1(request['data'], secretKey).toString(CryptoJS.enc.Hex);",
+							"",
+							"pm.environment.set(\"hmacSignature\", hmacDigest);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "0d2faa3d-0f7e-42f6-a06f-3e2b7530cd54",
+						"exec": [
+							"pm.environment.unset(\"hmacSignature\");",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "GitHub-Hookshot/0123456",
+						"type": "text"
+					},
+					{
+						"key": "x-hub-signature",
+						"value": "sha1={{hmacSignature}}",
+						"type": "text"
+					},
+					{
+						"key": "x-github-event",
+						"value": "release",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}update",
+					"host": [
+						"{{baseUrl}}update"
+					]
+				},
+				"description": "This will update the Mongo database that a stable build needs to be done."
+			},
+			"response": []
+		},
+		{
+			"name": "Update - Push",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "47b0659d-48ab-4227-a171-df8b460133bf",
+						"exec": [
+							"let secretKey = pm.environment.get(\"secretKey\");",
+							"let hmacDigest = CryptoJS.HmacSHA1(request['data'], secretKey).toString(CryptoJS.enc.Hex);",
+							"",
+							"pm.environment.set(\"hmacSignature\", hmacDigest);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "224c00b1-e0f3-45b2-aae1-8006c63e3e6e",
+						"exec": [
+							"pm.environment.unset(\"hmacSignature\");",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "GitHub-Hookshot/0123456",
+						"type": "text"
+					},
+					{
+						"key": "x-hub-signature",
+						"value": "sha1=e323f49568ad548179e67542a1fb2dd512e73cd8",
+						"type": "text"
+					},
+					{
+						"key": "x-github-event",
+						"value": "push",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}update",
+					"host": [
+						"{{baseUrl}}update"
+					]
+				},
+				"description": "This will update the Mongo database that a bleeding edge build needs to be done."
+			},
+			"response": []
+		}
+	]
+}
