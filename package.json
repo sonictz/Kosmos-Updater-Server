@@ -13,13 +13,14 @@
     "archiver": "^2.1.1",
     "body-parser": "^1.18.3",
     "count-files": "^2.6.2",
-    "express": "^4.16.3",
+    "express": "^4.16.4",
     "influx": "^5.0.7",
-    "mongoose": "^5.3.4",
-    "recursive-copy": "^2.0.9",
+    "mongoose": "^5.4.10",
+    "recursive-copy": "^2.0.10",
     "rmfr": "^2.0.0",
-    "semver": "^5.5.0",
-    "simple-git": "^1.96.0",
-    "uuid": "^3.3.2"
+    "semver": "^5.6.0",
+    "simple-git": "^1.107.0",
+    "uuid": "^3.3.2",
+    "lodash": ">=4.17.11"
   }
 }
