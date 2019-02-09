@@ -22,6 +22,7 @@ const influx = require('influx')
 const config = require('./config.json')
 const update = require('./routes/update.route')
 const v3 = require('./routes/v3.route')
+const v4 = require('./routes/v4.route')
 
 // Setup MongoDB
 mongoose.connect(config.mongodb, { useNewUrlParser: true, useFindAndModify: false })
@@ -80,6 +81,7 @@ app.use((req, res, next) => {
 // Routes
 app.use(update)
 app.use('/v3', v3)
+app.use('/v4', v4)
 
 app.listen(config.portNumber, () => {
     console.log(`Server is listening on ${ config.portNumber }`)

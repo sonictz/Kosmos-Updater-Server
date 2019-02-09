@@ -84,7 +84,9 @@ class Updater {
                     const version = await this._getLatestVersion((cron.channel === 'stable'), repo)
 
                     const bundles = await this._findBundles()
-                    bundles.forEach((bundle) => {
+                    for (let i = 0; i < bundles.length; i++) {
+                        const bundle = bundles[i]
+
                         console.log(`Build the bundle for "${ bundle.name }"...`)
                         results = await this._buildBundle(bundle)
                         await this._createPackage(version, bundle.name, cron.channel, results.numberOfFiles, results.path)
@@ -92,7 +94,7 @@ class Updater {
                         // TODO: get payloads.
                         // results = await this._buildPayload(bundle)
                         // await this._createPayload(version, bundle.name, cron.channel, results.path)
-                    })
+                    }
                 } catch (e) {
                     reject(e)
                     return
@@ -301,7 +303,8 @@ class Updater {
             }
             fs.mkdirSync(tmpDir)
 
-            bundle.modules.forEach(module => {
+            for (let i = 0; i < bundle.modules.length; i++) {
+                const module = bundle.modules[i]
                 if (fs.existsSync(`${ __dirname }/Kosmos/Modules/${ module }`)) {
                     try {
                         await copy(`${ __dirname }/Kosmos/Modules/${ module }`, tmpDir, { overwrite: true })
@@ -310,12 +313,12 @@ class Updater {
                         return
                     }
                 }
-            });
+            };
 
-            const path = `${ __dirname }/res/${ uuidv4() }`
+            const path = `${ __dirname }/res/${ uuidv4() }.zip`
 
             try {
-                await this._archive('zip', tmpDir, `${ path }.zip`)
+                await this._archive('zip', tmpDir, `${ path }`)
             } catch (e) {
                 reject(`Problem creating zip file: ${ e }`)
                 return

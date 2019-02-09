@@ -24,6 +24,13 @@ const Payload = require('../models/payload.model')
 module.exports = class V4Controller {
     constructor() {
         this.serverHeader = 'SDFU/4.0'
+
+        this.getApp = this.getApp.bind(this)
+        this.getAppVersionNumber = this.getAppVersionNumber.bind(this)
+        this.getBundles = this.getBundles.bind(this)
+        this.getPackage = this.getPackage.bind(this)
+        this.getPackageVersionNumber = this.getPackageVersionNumber.bind(this)
+        this.getPayload = this.getPayload.bind(this)
     }
 
     getApp(req, res) {
@@ -64,7 +71,7 @@ module.exports = class V4Controller {
     }
 
     getBundles(req, res) {
-        Bundle.find({}).sort({ order: -1 }).exec((err, bundles) => {
+        Bundle.find({}).sort({ order: 1 }).exec((err, bundles) => {
             if (err || bundles === null) {
                 res.status(500)
                 res.setHeader('Server', this.serverHeader)
@@ -83,7 +90,7 @@ module.exports = class V4Controller {
     }
 
     getPackage(req, res) {
-        Package.findOne({ bundle: req.query.bundle, channel: req.query.channel }).sort({ _id: -1 }).exec((err, package) => {
+        Package.findOne({ bundle: req.query.bundle, channel: req.query.channel }).sort({ _id: -1 }).exec((err, pkg) => {
             if (err) {
                 res.status(500)
                 res.setHeader('Server', this.serverHeader)
@@ -91,7 +98,7 @@ module.exports = class V4Controller {
                 return
             }
 
-            if (package === null) {
+            if (pkg === null) {
                 res.status(404)
                 res.setHeader('Server', this.serverHeader)
                 res.send()
@@ -100,28 +107,28 @@ module.exports = class V4Controller {
 
             if (req.influxdb) {
                 req.influxdb.writeMeasurement('download', [{
-                    tags: { bundle: package.bundle, channel: package.channel },
+                    tags: { bundle: pkg.bundle, channel: pkg.channel },
                     fields: { count: 1 },
                     timestamp: new Date()
                 }])
             }
 
-            const stat = fs.statSync(package.path + '.zip')
+            const stat = fs.statSync(pkg.path)
 
             res.status(200)
             res.setHeader('Server', this.serverHeader)
             res.setHeader('Content-Type', `application/zip`)
             res.setHeader('Content-Length', stat.size)
-            res.setHeader('Content-Disposition', `attachment; filename="${ package.bundle }-${ package.channel }.zip"`)
-            res.setHeader('X-Version-Number', package.version)
-            res.setHeader('X-Number-Of-Files', package.numberOfFiles)
+            res.setHeader('Content-Disposition', `attachment; filename="${ pkg.bundle }-${ pkg.channel }.zip"`)
+            res.setHeader('X-Version-Number', pkg.version)
+            res.setHeader('X-Number-Of-Files', pkg.numberOfFiles)
 
-            fs.createReadStream(package.path + '.zip').pipe(res)
+            fs.createReadStream(pkg.path).pipe(res)
         })
     }
 
     getPackageVersionNumber(req, res) {
-        Package.findOne({ channel: req.query.channel }).sort({ _id: -1 }).exec((err, package) => {
+        Package.findOne({ channel: req.query.channel }).sort({ _id: -1 }).exec((err, pkg) => {
             if (err) {
                 res.status(500)
                 res.setHeader('Server', this.serverHeader)
@@ -129,7 +136,7 @@ module.exports = class V4Controller {
                 return
             }
 
-            if (package === null) {
+            if (pkg === null) {
                 res.status(404)
                 res.setHeader('Server', this.serverHeader)
                 res.send()
@@ -139,13 +146,13 @@ module.exports = class V4Controller {
             res.status(200)
             res.setHeader('Server', this.serverHeader)
             res.setHeader('Content-Type', 'text/plain')
-            res.setHeader('Content-Length', package.version.length)
-            res.send(package.version)
+            res.setHeader('Content-Length', pkg.version.length)
+            res.send(pkg.version)
         })
     }
 
-    getBundles(req, res) {
-        Payload.findOne({ bundle: req.query.bundle, channel: req.query.channel }).sort({ _id: -1 }).exec((err, package) => {
+    getPayload(req, res) {
+        Payload.findOne({ bundle: req.query.bundle, channel: req.query.channel }).sort({ _id: -1 }).exec((err, pkg) => {
             if (err) {
                 res.status(500)
                 res.setHeader('Server', this.serverHeader)
@@ -153,7 +160,7 @@ module.exports = class V4Controller {
                 return
             }
 
-            if (package === null) {
+            if (pkg === null) {
                 res.status(404)
                 res.setHeader('Server', this.serverHeader)
                 res.send()
@@ -162,22 +169,22 @@ module.exports = class V4Controller {
 
             if (req.influxdb) {
                 req.influxdb.writeMeasurement('payload', [{
-                    tags: { bundle: package.bundle, channel: package.channel },
+                    tags: { bundle: pkg.bundle, channel: pkg.channel },
                     fields: { count: 1 },
                     timestamp: new Date()
                 }])
             }
 
-            const stat = fs.statSync(package.path + '.bin')
+            const stat = fs.statSync(pkg.path)
 
             res.status(200)
             res.setHeader('Server', this.serverHeader)
             res.setHeader('Content-Type', `application/octet-stream`)
             res.setHeader('Content-Length', stat.size)
-            res.setHeader('Content-Disposition', `attachment; filename="${ package.bundle }-${ package.channel }.bin"`)
-            res.setHeader('X-Version-Number', package.version)
+            res.setHeader('Content-Disposition', `attachment; filename="${ pkg.bundle }-${ pkg.channel }.bin"`)
+            res.setHeader('X-Version-Number', pkg.version)
 
-            fs.createReadStream(package.path + '.bin').pipe(res)
+            fs.createReadStream(pkg.path).pipe(res)
         })
     }
 }

@@ -19,7 +19,7 @@ const express = require('express')
 const V3Controller = require('../controllers/v3.controller')
 
 const router = express.Router()
-const controller = new V4Controller();
+const controller = new V3Controller();
 
 router.get('/app', controller.getApp)
 router.get('/app/version-number', controller.getAppVersionNumber)
