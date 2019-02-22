@@ -95,6 +95,10 @@ class Updater {
                         // results = await this._buildPayload(bundle)
                         // await this._createPayload(version, bundle.name, cron.channel, results.path)
                     }
+
+                    console.log(`Build the bundle for "es_patches"...`)
+                    results = await this._buildBundle({ modules: [ 'es_patches' ] })
+                    await this._createPackage(version, 'es_patches', cron.channel, results.numberOfFiles, results.path)
                 } catch (e) {
                     reject(e)
                     return
