@@ -105,7 +105,7 @@ module.exports = class V4Controller {
     }
 
     getPackageVersionNumber(req, res) {
-        Package.findOne({ channel: 'kosmos' }).sort({ _id: -1 }).exec((err, pkg) => {
+        Package.findOne({ channel: 'stable' }).sort({ _id: -1 }).exec((err, pkg) => {
             if (err) {
                 res.status(500)
                 res.setHeader('Server', this.serverHeader)
