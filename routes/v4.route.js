@@ -23,9 +23,7 @@ const controller = new V4Controller();
 
 router.get('/app', controller.getApp)
 router.get('/app/version-number', controller.getAppVersionNumber)
-router.get('/bundle', controller.getBundles)
 router.get('/package', controller.getPackage)
 router.get('/package/version-number', controller.getPackageVersionNumber)
-router.get('/payload', controller.getPayload)
 
 module.exports = router

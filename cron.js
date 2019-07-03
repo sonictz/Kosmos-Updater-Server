@@ -27,8 +27,6 @@ const uuidv4 = require('uuid/v4')
 const countFiles = require('count-files')
 const Cron = require('./models/cron.model')
 const Package = require('./models/package.model')
-const Bundle = require('./models/bundle.model')
-const Payload = require('./models/payload.model')
 
 class Updater {
     constructor() {
@@ -90,15 +88,7 @@ class Updater {
                         console.log(`Build the bundle for "${ bundle.name }"...`)
                         results = await this._buildBundle(bundle)
                         await this._createPackage(version, bundle.name, cron.channel, results.numberOfFiles, results.path)
-
-                        // TODO: get payloads.
-                        // results = await this._buildPayload(bundle)
-                        // await this._createPayload(version, bundle.name, cron.channel, results.path)
                     }
-
-                    console.log(`Build the bundle for "es_patches"...`)
-                    results = await this._buildBundle({ modules: [ 'es_patches' ] })
-                    await this._createPackage(version, 'es_patches', cron.channel, results.numberOfFiles, results.path)
                 } catch (e) {
                     reject(e)
                     return
@@ -165,24 +155,6 @@ class Updater {
             pkg.save((err) => {
                 if (err) {
                     reject(`Unable to save package to MongoDB: ${ err }`)
-                    return
-                }
-                resolve()
-            })
-        })
-    }
-
-    _createPayload(version, bundle, channel, path) {
-        return new Promise((resolve, reject) => {
-            let pkg = new Payload({
-                version,
-                bundle,
-                channel,
-                path
-            })
-            pkg.save((err) => {
-                if (err) {
-                    reject(`Unable to save payload to MongoDB: ${ err }`)
                     return
                 }
                 resolve()
