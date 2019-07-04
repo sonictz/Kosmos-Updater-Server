@@ -16,115 +16,48 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 const fs = require('fs')
-const App = require('../models/app.model')
-const Package = require('../models/package.model')
 
-module.exports = class V4Controller {
+module.exports = class V3Controller {
     constructor() {
         this.serverHeader = 'SDFU/3.0'
 
         this.getApp = this.getApp.bind(this)
         this.getAppVersionNumber = this.getAppVersionNumber.bind(this)
-        this.getPackage = this.getPackage.bind(this)
-        this.getPackageVersionNumber = this.getPackageVersionNumber.bind(this)
     }
 
     getApp(req, res) {
-        App.findOne({ channel: 'stable' }).sort({ _id: -1 }).exec((err, app) => {
-            if (err || app === null) {
-                res.status(500)
-                res.setHeader('Server', this.serverHeader)
-                res.send()
-                return
-            }
+        const path = `${ config.resourceDirectory }/KosmosUpdater.nro`
+        const stat = fs.statSync(path)
 
-            const stat = fs.statSync(app.path)
+        res.status(200)
+        res.setHeader('Server', this.serverHeader)
+        res.setHeader('Content-Type', 'application/octet-stream')
+        res.setHeader('Content-Length', stat.size)
+        res.setHeader('Content-Disposition', `attachment; filename="KosmosUpdater.nro"`)
 
-            res.status(200)
-            res.setHeader('Server', this.serverHeader)
-            res.setHeader('Content-Type', 'application/octet-stream')
-            res.setHeader('Content-Length', stat.size)
-            res.setHeader('Content-Disposition', 'attachment; filename="KosmosUpdater.nro"')
-            fs.createReadStream(app.path).pipe(res)
-        })
+        fs.createReadStream(pkg.path).pipe(res)
     }
 
-    getAppVersionNumber(req, res) {
-        App.findOne({ channel: 'stable' }).sort({ _id: -1 }).exec((err, app) => {
-            if (err || app === null) {
-                res.status(500)
-                res.setHeader('Server', this.serverHeader)
-                res.send()
-                return
-            }
+    async getAppVersionNumber(req, res) {
+        const version = await this._getContentOfFile(`${ config.resourceDirectory }/KosmosUpdaterVersion.txt`);
 
-            res.status(200)
-            res.setHeader('Server', this.serverHeader)
-            res.setHeader('Content-Type', 'text/plain')
-            res.setHeader('Content-Length', app.version.length)
-            res.send(app.version)
-        })
+        res.status(200)
+        res.setHeader('Server', this.serverHeader)
+        res.setHeader('Content-Type', 'text/plain')
+        res.setHeader('Content-Length', version.length)
+        res.send(version)
     }
 
-    getPackage(req, res) {
-        Package.findOne({ bundle: req.query.bundle, channel: req.query.channel }).sort({ _id: -1 }).exec((err, pkg) => {
-            if (err) {
-                res.status(500)
-                res.setHeader('Server', this.serverHeader)
-                res.send()
-                return
-            }
+    _getContentOfFile(file) {
+        return new Promise((resolve, reject) => {
+            fs.readFile(file, function(err, buf) {
+                if (err) {
+                    reject(err)
+                    return
+                }
 
-            if (pkg === null) {
-                res.status(404)
-                res.setHeader('Server', this.serverHeader)
-                res.send()
-                return
-            }
-
-            if (req.influxdb) {
-                req.influxdb.writeMeasurement('download', [{
-                    tags: { bundle: pkg.bundle, channel: pkg.channel },
-                    fields: { count: 1 },
-                    timestamp: new Date()
-                }])
-            }
-
-            const stat = fs.statSync(pkg.path)
-
-            res.status(200)
-            res.setHeader('Server', this.serverHeader)
-            res.setHeader('Content-Type', `application/zip`)
-            res.setHeader('Content-Length', stat.size)
-            res.setHeader('Content-Disposition', `attachment; filename="${ pkg.bundle }-${ pkg.channel }.zip"`)
-            res.setHeader('X-Version-Number', pkg.version)
-            res.setHeader('X-Number-Of-Files', pkg.numberOfFiles)
-
-            fs.createReadStream(pkg.path).pipe(res)
-        })
-    }
-
-    getPackageVersionNumber(req, res) {
-        Package.findOne({ channel: req.query.channel }).sort({ _id: -1 }).exec((err, pkg) => {
-            if (err) {
-                res.status(500)
-                res.setHeader('Server', this.serverHeader)
-                res.send()
-                return
-            }
-
-            if (pkg === null) {
-                res.status(404)
-                res.setHeader('Server', this.serverHeader)
-                res.send()
-                return
-            }
-
-            res.status(200)
-            res.setHeader('Server', this.serverHeader)
-            res.setHeader('Content-Type', 'text/plain')
-            res.setHeader('Content-Length', pkg.version.length)
-            res.send(pkg.version)
+                resolve(buf.toString())
+            })
         })
     }
 }

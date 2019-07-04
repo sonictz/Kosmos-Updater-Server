@@ -23,7 +23,5 @@ const controller = new V3Controller();
 
 router.get('/app', controller.getApp)
 router.get('/app/version-number', controller.getAppVersionNumber)
-router.get('/package', controller.getPackage)
-router.get('/package/version-number', controller.getPackageVersionNumber)
 
 module.exports = router

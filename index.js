@@ -17,23 +17,10 @@
 
 const express = require('express')
 const bodyParser = require('body-parser')
-const mongoose = require('mongoose')
-const influx = require('influx')
 const config = require('./config.json')
 const update = require('./routes/update.route')
 const v3 = require('./routes/v3.route')
 const v4 = require('./routes/v4.route')
-
-// Setup MongoDB
-mongoose.connect(config.mongodb, { useNewUrlParser: true, useFindAndModify: false })
-mongoose.Promise = global.Promise
-const db = mongoose.connection
-db.on('error', (err) => {
-    console.error(`MongoDB connection error: ${ err }`)
-})
-
-// Setup Influx
-const influxdb = new influx.InfluxDB(config.influxdb)
 
 // Setup Express
 const app = express()
@@ -59,23 +46,6 @@ app.use((req, res, next) => {
 
     res.status(401)
     res.send('Unauthorized - Incorrect User Agent')
-})
-
-// Record traffic to InfluxDB
-app.use((req, res, next) => {
-    if (!influxdb) {
-        next()
-    }
-
-    req.influxdb = influxdb
-
-    influxdb.writeMeasurement('visit', [{
-        tags: { path: req.path },
-        fields: { count: 1 },
-        timestamp: new Date()
-    }])
-
-    next()
 })
 
 // Routes

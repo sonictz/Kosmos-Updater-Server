@@ -16,10 +16,12 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 const express = require('express')
-const update_controller = require('../controllers/update.controller')
+const UpdateController = require('../controllers/update.controller')
 
 const router = express.Router()
+const controller = new UpdateController();
 
-router.post('/update', update_controller.postUpdate)
+router.post('/update', controller.postUpdate)
+router.post('/update/app', controller.postAppUpdate)
 
 module.exports = router
