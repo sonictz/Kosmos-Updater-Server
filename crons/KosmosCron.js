@@ -51,33 +51,33 @@ module.exports = class KosmosCron {
                 json: true
             }
 
-            try {
-                request.get(options, (error, response, data) => {
-                    if (!data.assets || !Array.isArray(data.assets)) {
-                        reject('No assets on release.')
-                        return
-                    }
-    
-                    const asset = data.assets.find((element) => {
-                        return element.name.toLowerCase().startsWith('kosmos')
-                    })
-    
-                    if (!asset) {
-                        reject('Unable to find Kosmos.')
-                        return
-                    } else if (!asset.browser_download_url) {
-                        reject('No download URL for Kosmos.')
-                        return
-                    }
-    
-                    resolve({
-                        version: data.tag_name,
-                        downloadUrl: asset.browser_download_url
-                    })
+            request.get(options, (error, response, data) => {
+                if (error) {
+                    reject('HTTP Error - ' + err.message)
+                }
+
+                if (!data.assets || !Array.isArray(data.assets)) {
+                    reject('No assets on release.')
+                    return
+                }
+
+                const asset = data.assets.find((element) => {
+                    return element.name.toLowerCase().startsWith('kosmos')
                 })
-            } catch (err) {
-                reject('HTTP Error - ' + err.message)
-            }
+
+                if (!asset) {
+                    reject('Unable to find Kosmos.')
+                    return
+                } else if (!asset.browser_download_url) {
+                    reject('No download URL for Kosmos.')
+                    return
+                }
+
+                resolve({
+                    version: data.tag_name,
+                    downloadUrl: asset.browser_download_url
+                })
+            })
         })
     }
 

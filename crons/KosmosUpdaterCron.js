@@ -18,7 +18,7 @@
 const config = require('../config.json')
 const FileSystemService = require('../services/FilesystemService')
 const fs = require('fs')
-const request = require('request-promise-native')
+const request = require('request')
 
 module.exports = class KosmosUpdaterCron {
     constructor() {
@@ -48,8 +48,10 @@ module.exports = class KosmosUpdaterCron {
                 json: true
             }
 
-            try {
-                const data = await request.get(options)
+            request.get(options, (error, response, data) => {
+                if (error) {
+                    reject('HTTP Error - ' + err.message)
+                }
                 if (!data.assets || !Array.isArray(data.assets)) {
                     reject('No assets on release.')
                     return
@@ -71,9 +73,7 @@ module.exports = class KosmosUpdaterCron {
                     version: data.tag_name,
                     downloadUrl: asset.browser_download_url
                 })
-            } catch (err) {
-                reject('HTTP Error - ' + err.message)
-            }
+            })
         })
     }
 
@@ -108,19 +108,17 @@ module.exports = class KosmosUpdaterCron {
                 encoding: null
             }
 
-            try {
-                const data = await request.get(options)
+            request.get(options, async (error, response, data) => {
+                if (error) {
+                    reject('HTTP Error - ' + err.message)
+                    return
+                }
 
                 await FileSystemService.deleteFile(`${ config.resourceDirectory }/KosmosUpdater.nro`)
-
-                const stream = fs.createWriteStream(`${ config.resourceDirectory }/KosmosUpdater.nro`)
-                stream.write(data)
-                stream.end()
+                await FileSystemService.renameFile(`${ config.resourceDirectory }/KosmosUpdater_tmp.nro`, `${ config.resourceDirectory }/KosmosUpdater.nro`)
 
                 resolve()
-            } catch (err) {
-                reject('HTTP Error - ' + err.message)
-            }
+            }).pipe(fs.createWriteStream(`${ config.resourceDirectory }/KosmosUpdater_tmp.nro`))
         })
     }
 }
