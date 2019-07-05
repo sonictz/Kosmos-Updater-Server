@@ -36,7 +36,7 @@ module.exports = class V3Controller {
         res.setHeader('Content-Length', stat.size)
         res.setHeader('Content-Disposition', `attachment; filename="KosmosUpdater.nro"`)
 
-        fs.createReadStream(pkg.path).pipe(res)
+        fs.createReadStream(path).pipe(res)
     }
 
     async getAppVersionNumber(req, res) {
