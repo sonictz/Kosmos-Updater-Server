@@ -16,6 +16,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 const fs = require('fs')
+const config = require('../config.json')
 
 module.exports = class V3Controller {
     constructor() {
