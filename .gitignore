@@ -1,7 +1,9 @@
-res
-Kosmos
-bleedingedge-temp
-stable-temp
+res/Kosmos.zip
+res/KosmosUpdater.nro
+res/KosmosUpdaterVersion.txt
+res/KosmosVersion.txt
+res/UpdateKosmos
+res/UpdateKosmosUpdater
 
 # Logs
 logs
