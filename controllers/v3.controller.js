@@ -57,7 +57,7 @@ module.exports = class V3Controller {
                     return
                 }
 
-                resolve(buf.toString())
+                resolve(buf.toString().trim())
             })
         })
     }

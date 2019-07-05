@@ -84,7 +84,7 @@ module.exports = class V4Controller {
                     return
                 }
 
-                resolve(buf.toString())
+                resolve(buf.toString().trim())
             })
         })
     }
