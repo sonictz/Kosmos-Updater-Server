@@ -90,7 +90,7 @@ module.exports = class KosmosCron {
                 return
             }
 
-            fs.writeFile(`${ config.resourceDirectory }/KosmosVersion.txt`, version, (writeErr) => {
+            fs.writeFile(`${ config.resourceDirectory }/KosmosVersion.txt`, version.trim(), (writeErr) => {
                 if (writeErr) {
                     reject('Unable to write version file.')
                     return

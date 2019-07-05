@@ -86,7 +86,7 @@ module.exports = class KosmosUpdaterCron {
                 return
             }
 
-            fs.writeFile(`${ config.resourceDirectory }/KosmosUpdaterVersion.txt`, version.substring(1), (writeErr) => {
+            fs.writeFile(`${ config.resourceDirectory }/KosmosUpdaterVersion.txt`, version.substring(1).trim(), (writeErr) => {
                 if (writeErr) {
                     reject('Unable to write version file.')
                     return
