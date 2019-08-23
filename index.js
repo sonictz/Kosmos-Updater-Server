@@ -18,6 +18,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const config = require('./config.json')
+const ping = require('./routes/ping.route')
 const update = require('./routes/update.route')
 const v3 = require('./routes/v3.route')
 const v4 = require('./routes/v4.route')
@@ -39,7 +40,7 @@ app.use((req, res, next) => {
     const userAgent = req.headers['user-agent']
     const path = req.path
 
-    if ((userAgent && path.startsWith('/update') && userAgent.startsWith('GitHub-Hookshot/')) || (userAgent && !path.startsWith('/update') && userAgent.startsWith('kosmos-updater/'))) {
+    if ((userAgent && path.startsWith('/update') && userAgent.startsWith('GitHub-Hookshot/')) || (userAgent && !path.startsWith('/update') && userAgent.startsWith('kosmos-updater/')) || path.startsWith('/ping')) {
         next()
         return
     }
@@ -49,6 +50,7 @@ app.use((req, res, next) => {
 })
 
 // Routes
+app.use(ping)
 app.use(update)
 app.use('/v3', v3)
 app.use('/v4', v4)
