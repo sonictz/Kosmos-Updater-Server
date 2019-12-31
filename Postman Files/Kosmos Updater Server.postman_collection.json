@@ -1,34 +1,31 @@
 {
 	"info": {
-		"_postman_id": "995cc252-6f5b-45e0-8496-10e078aa2029",
+		"_postman_id": "918a7105-34b1-4b5d-8b17-a2a61b6d0214",
 		"name": "Kosmos Updater Server",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Version 3 APIs",
+			"name": "v3",
 			"item": [
 				{
-					"name": "App",
+					"name": "Kosmos Updater",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "User-Agent",
-								"value": "{{userAgent}}",
+								"value": "kosmos-updater/3.0.9",
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
-							"raw": "{{baseUrl}}{{apiVersion}}/app",
+							"raw": "{{host}}/{{api-version}}/app",
 							"host": [
-								"{{baseUrl}}{{apiVersion}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{api-version}}",
 								"app"
 							]
 						}
@@ -36,244 +33,25 @@
 					"response": []
 				},
 				{
-					"name": "App Version Number",
+					"name": "Kosmos Updater Version",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "User-Agent",
-								"value": "{{userAgent}}",
-								"type": "text"
+								"type": "text",
+								"value": "kosmos-updater/3.0.9"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
-							"raw": "{{baseUrl}}{{apiVersion}}/app/version-number",
+							"raw": "{{host}}/{{api-version}}/app/version-number",
 							"host": [
-								"{{baseUrl}}{{apiVersion}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{api-version}}",
 								"app",
 								"version-number"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Package - Bleeding Edge Kosmos",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "User-Agent",
-								"type": "text",
-								"value": "{{userAgent}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{baseUrl}}{{apiVersion}}/package?bundle=kosmos&channel=bleeding-edge",
-							"host": [
-								"{{baseUrl}}{{apiVersion}}"
-							],
-							"path": [
-								"package"
-							],
-							"query": [
-								{
-									"key": "bundle",
-									"value": "kosmos"
-								},
-								{
-									"key": "channel",
-									"value": "bleeding-edge"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Package - Bleeding Edge Atmosphere",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "User-Agent",
-								"type": "text",
-								"value": "{{userAgent}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{baseUrl}}{{apiVersion}}/package?bundle=atmosphere&channel=bleeding-edge",
-							"host": [
-								"{{baseUrl}}{{apiVersion}}"
-							],
-							"path": [
-								"package"
-							],
-							"query": [
-								{
-									"key": "bundle",
-									"value": "atmosphere"
-								},
-								{
-									"key": "channel",
-									"value": "bleeding-edge"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Package - Stable Kosmos",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "User-Agent",
-								"type": "text",
-								"value": "{{userAgent}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{baseUrl}}{{apiVersion}}/package?bundle=kosmos&channel=stable",
-							"host": [
-								"{{baseUrl}}{{apiVersion}}"
-							],
-							"path": [
-								"package"
-							],
-							"query": [
-								{
-									"key": "bundle",
-									"value": "kosmos"
-								},
-								{
-									"key": "channel",
-									"value": "stable"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Package - Stable Atmosphere",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "User-Agent",
-								"type": "text",
-								"value": "{{userAgent}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{baseUrl}}{{apiVersion}}/package?bundle=atmosphere&channel=stable",
-							"host": [
-								"{{baseUrl}}{{apiVersion}}"
-							],
-							"path": [
-								"package"
-							],
-							"query": [
-								{
-									"key": "bundle",
-									"value": "atmosphere"
-								},
-								{
-									"key": "channel",
-									"value": "stable"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Package Version Number - Bleeding Edge",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "User-Agent",
-								"type": "text",
-								"value": "{{userAgent}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{baseUrl}}{{apiVersion}}/package/version-number?channel=bleeding-edge",
-							"host": [
-								"{{baseUrl}}{{apiVersion}}"
-							],
-							"path": [
-								"package",
-								"version-number"
-							],
-							"query": [
-								{
-									"key": "channel",
-									"value": "bleeding-edge"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Package Version Number - Stable",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "User-Agent",
-								"type": "text",
-								"value": "{{userAgent}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{baseUrl}}{{apiVersion}}/package/version-number?channel=stable",
-							"host": [
-								"{{baseUrl}}{{apiVersion}}"
-							],
-							"path": [
-								"package",
-								"version-number"
-							],
-							"query": [
-								{
-									"key": "channel",
-									"value": "stable"
-								}
 							]
 						}
 					},
@@ -284,49 +62,71 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "1afa6f22-4faa-4573-969e-dea45091acf6",
+						"id": "2eab6a15-5a24-4306-86e3-df743f27b920",
 						"type": "text/javascript",
 						"exec": [
-							"pm.environment.set(\"apiVersion\", \"v3\");"
+							"pm.environment.set('api-version', 'v3');"
 						]
 					}
 				},
 				{
 					"listen": "test",
 					"script": {
-						"id": "e4a2b290-07fd-45d2-9257-751e9b5478f6",
+						"id": "cdf793b2-7c66-4cd4-98c0-13b32d30684a",
 						"type": "text/javascript",
 						"exec": [
 							""
 						]
 					}
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "Version 4 APIs",
+			"name": "v4",
 			"item": [
 				{
-					"name": "App",
+					"name": "Kosmos",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "User-Agent",
-								"value": "{{userAgent}}",
+								"type": "text",
+								"value": "kosmos-updater/3.0.9"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/{{api-version}}/package",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{api-version}}",
+								"package"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Kosmos Updater",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "kosmos-updater/3.0.9",
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
-							"raw": "{{baseUrl}}{{apiVersion}}/app",
+							"raw": "{{host}}/{{api-version}}/app",
 							"host": [
-								"{{baseUrl}}{{apiVersion}}"
+								"{{host}}"
 							],
 							"path": [
+								"{{api-version}}",
 								"app"
 							]
 						}
@@ -334,27 +134,24 @@
 					"response": []
 				},
 				{
-					"name": "App Version Number",
+					"name": "Kosmos Version",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "User-Agent",
-								"value": "{{userAgent}}",
-								"type": "text"
+								"type": "text",
+								"value": "kosmos-updater/3.0.9"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
-							"raw": "{{baseUrl}}{{apiVersion}}/app/version-number",
+							"raw": "{{host}}/{{api-version}}/package/version-number",
 							"host": [
-								"{{baseUrl}}{{apiVersion}}"
+								"{{host}}"
 							],
 							"path": [
-								"app",
+								"{{api-version}}",
+								"package",
 								"version-number"
 							]
 						}
@@ -362,175 +159,25 @@
 					"response": []
 				},
 				{
-					"name": "Bundles",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "User-Agent",
-								"value": "{{userAgent}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{baseUrl}}{{apiVersion}}/bundle",
-							"host": [
-								"{{baseUrl}}{{apiVersion}}"
-							],
-							"path": [
-								"bundle"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Package - Bleeding Edge",
+					"name": "Kosmos Updater Version",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "User-Agent",
 								"type": "text",
-								"value": "{{userAgent}}"
+								"value": "kosmos-updater/3.0.9"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
-							"raw": "{{baseUrl}}{{apiVersion}}/package?bundle=&channel=bleeding-edge",
+							"raw": "{{host}}/{{api-version}}/app/version-number",
 							"host": [
-								"{{baseUrl}}{{apiVersion}}"
+								"{{host}}"
 							],
 							"path": [
-								"package"
-							],
-							"query": [
-								{
-									"key": "bundle",
-									"value": ""
-								},
-								{
-									"key": "channel",
-									"value": "bleeding-edge"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Package - Stable",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "User-Agent",
-								"type": "text",
-								"value": "{{userAgent}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{baseUrl}}{{apiVersion}}/package?bundle=&channel=stable",
-							"host": [
-								"{{baseUrl}}{{apiVersion}}"
-							],
-							"path": [
-								"package"
-							],
-							"query": [
-								{
-									"key": "bundle",
-									"value": ""
-								},
-								{
-									"key": "channel",
-									"value": "stable"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Payload - Bleeding Edge",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "User-Agent",
-								"type": "text",
-								"value": "{{userAgent}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{baseUrl}}{{apiVersion}}/payload?bundle=&channel=bleeding-edge",
-							"host": [
-								"{{baseUrl}}{{apiVersion}}"
-							],
-							"path": [
-								"payload"
-							],
-							"query": [
-								{
-									"key": "bundle",
-									"value": ""
-								},
-								{
-									"key": "channel",
-									"value": "bleeding-edge"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Payload - Stable",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "User-Agent",
-								"type": "text",
-								"value": "{{userAgent}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{baseUrl}}{{apiVersion}}/payload?bundle=&channel=stable",
-							"host": [
-								"{{baseUrl}}{{apiVersion}}"
-							],
-							"path": [
-								"payload"
-							],
-							"query": [
-								{
-									"key": "bundle",
-									"value": ""
-								},
-								{
-									"key": "channel",
-									"value": "stable"
-								}
+								"{{api-version}}",
+								"app",
+								"version-number"
 							]
 						}
 					},
@@ -541,49 +188,55 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "2edd8738-c55c-4a25-9fa0-580ad1c17652",
+						"id": "4eacbd44-a826-4102-90bc-7d38258b2701",
 						"type": "text/javascript",
 						"exec": [
-							"pm.environment.set(\"apiVersion\", \"v4\");"
+							"pm.environment.set('api-version', 'v4');"
 						]
 					}
 				},
 				{
 					"listen": "test",
 					"script": {
-						"id": "94e6f83b-72b4-40cc-9322-bac305af4811",
+						"id": "6067763f-2a10-4fe2-98ad-c60e2714cb59",
 						"type": "text/javascript",
 						"exec": [
 							""
 						]
 					}
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "Update - Release",
+			"name": "Ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/ping",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Kosmos",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "47b0659d-48ab-4227-a171-df8b460133bf",
+						"id": "56e34d13-a394-4b19-a85c-3d4c5670f678",
 						"exec": [
-							"let secretKey = pm.environment.get(\"secretKey\");",
-							"let hmacDigest = CryptoJS.HmacSHA1(request['data'], secretKey).toString(CryptoJS.enc.Hex);",
+							"var secret = 'GitHub Webhook Secret Goes Here';",
+							"var hash = CryptoJS.HmacSHA1(pm.request.body.raw, secret).toString(CryptoJS.digest);",
 							"",
-							"pm.environment.set(\"hmacSignature\", hmacDigest);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "0d2faa3d-0f7e-42f6-a06f-3e2b7530cd54",
-						"exec": [
-							"pm.environment.unset(\"hmacSignature\");",
-							""
+							"pm.environment.set('signature', `sha1=${hash}`);"
 						],
 						"type": "text/javascript"
 					}
@@ -593,13 +246,8 @@
 				"method": "POST",
 				"header": [
 					{
-						"key": "User-Agent",
-						"value": "GitHub-Hookshot/0123456",
-						"type": "text"
-					},
-					{
 						"key": "x-hub-signature",
-						"value": "sha1={{hmacSignature}}",
+						"value": "{{signature}}",
 						"type": "text"
 					},
 					{
@@ -612,46 +260,46 @@
 						"name": "Content-Type",
 						"value": "application/json",
 						"type": "text"
+					},
+					{
+						"key": "User-Agent",
+						"value": "GitHub-Hookshot/1.0.0",
+						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{}"
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}update",
+					"raw": "{{host}}/update",
 					"host": [
-						"{{baseUrl}}update"
+						"{{host}}"
+					],
+					"path": [
+						"update"
 					]
-				},
-				"description": "This will update the Mongo database that a stable build needs to be done."
+				}
 			},
 			"response": []
 		},
 		{
-			"name": "Update - Push",
+			"name": "Update Kosmos Updater",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "47b0659d-48ab-4227-a171-df8b460133bf",
+						"id": "56e34d13-a394-4b19-a85c-3d4c5670f678",
 						"exec": [
-							"let secretKey = pm.environment.get(\"secretKey\");",
-							"let hmacDigest = CryptoJS.HmacSHA1(request['data'], secretKey).toString(CryptoJS.enc.Hex);",
+							"var secret = 'GitHub Webhook Secret Goes Here';",
+							"var hash = CryptoJS.HmacSHA1(pm.request.body.raw, secret).toString(CryptoJS.digest);",
 							"",
-							"pm.environment.set(\"hmacSignature\", hmacDigest);",
-							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "224c00b1-e0f3-45b2-aae1-8006c63e3e6e",
-						"exec": [
-							"pm.environment.unset(\"hmacSignature\");",
-							""
+							"pm.environment.set('signature', `sha1=${hash}`);"
 						],
 						"type": "text/javascript"
 					}
@@ -661,40 +309,49 @@
 				"method": "POST",
 				"header": [
 					{
-						"key": "User-Agent",
-						"value": "GitHub-Hookshot/0123456",
-						"type": "text"
-					},
-					{
 						"key": "x-hub-signature",
-						"value": "sha1=e323f49568ad548179e67542a1fb2dd512e73cd8",
-						"type": "text"
+						"type": "text",
+						"value": "{{signature}}"
 					},
 					{
 						"key": "x-github-event",
-						"value": "push",
-						"type": "text"
+						"type": "text",
+						"value": "release"
 					},
 					{
 						"key": "Content-Type",
 						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "User-Agent",
+						"type": "text",
+						"value": "GitHub-Hookshot/1.0.0"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{}"
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}update",
+					"raw": "{{host}}/update/app",
 					"host": [
-						"{{baseUrl}}update"
+						"{{host}}"
+					],
+					"path": [
+						"update",
+						"app"
 					]
-				},
-				"description": "This will update the Mongo database that a bleeding edge build needs to be done."
+				}
 			},
 			"response": []
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }

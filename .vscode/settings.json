@@ -1,0 +1,4 @@
+{
+    "javascript.preferences.quoteStyle": "single",
+    "javascript.format.semicolons": "remove"
+}
