@@ -1,4 +1,4 @@
-// Kosmos Updater Server
+﻿// Kosmos Updater Server
 // Copyright (C) 2019 Nichole Mattera
 //
 // This program is free software; you can redistribute it and/or
@@ -15,9 +15,27 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import App from './App'
-import Config from './config.json'
-import Controllers from './controllers'
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
-const app = new App(Controllers, Config.portNumber)
-app.listen()
+namespace KosmosUpdaterServer
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            CreateWebHostBuilder(args).Build().Run();
+        }
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>();
+    }
+}

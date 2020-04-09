@@ -1,5 +1,0 @@
-{
-    "portNumber": 9001,
-    "secret": "GitHub Webhook Secret Goes Here",
-    "resourceDirectory": "/home/nmattera/Projects/Kosmos-Updater-Server/dist/res"
-}
